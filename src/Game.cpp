@@ -1,10 +1,11 @@
 #include "./Game.h"
+#include "../lib/glm/glm.hpp"
 #include "./Constants.h"
 #include <iostream>
 
 Game::Game()
 {
-    this->isRunning = false;
+    isRunning = false;
 }
 
 Game::~Game()
@@ -13,15 +14,13 @@ Game::~Game()
 
 bool Game::IsRunning() const
 {
-    return this->isRunning;
+    return isRunning;
 }
 
-float projectilePosX = 0.0f;
-float projectilePosY = 0.0f;
-float projectileVelX = 20.0f;
-float projectileVelY = 30.0f;
+glm::vec2 projectilePos = glm::vec2(0.0f, 0.0f);
+glm::vec2 projectileVel = glm::vec2(20.0f, 20.0f);
 
-void Game::Initialize(int width, int height)
+void Game::Initialize(int width, int height)    // init SDL
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -46,15 +45,16 @@ void Game::Initialize(int width, int height)
 
 void Game::ProcessInput()
 {
-    SDL_Event event;
-    SDL_PollEvent(&event);
-    switch (event.type)
+    SDL_Event event;       // create the SDL event object
+    SDL_PollEvent(&event); // tell SDL to track the event
+    switch (event.type)    // get event type and switch on it
     {
-    case SDL_QUIT:
-        isRunning = false;
+    case SDL_QUIT:         // escape key on the window
+        isRunning = false; //break game loop
         break;
-    case SDL_KEYDOWN:
-        if (event.key.keysym.sym = SDLK_ESCAPE)
+
+    case SDL_KEYDOWN:                           // any key is pressed down
+        if (event.key.keysym.sym = SDLK_ESCAPE) // if this key is the Esc key
             isRunning = false;
         break;
     }
@@ -62,32 +62,37 @@ void Game::ProcessInput()
 
 void Game::Update()
 {
-    while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TARGET_TIME))
-        ;
+    // while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TIME_TARGET));
 
-    float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f;
+    float waitTime = FRAME_TIME_TARGET - (SDL_GetTicks() - ticksLastFrame); // calculate time to wait between frames
 
-    ticksLastFrame = SDL_GetTicks();
+    if (waitTime > 0 && waitTime <= FRAME_TIME_TARGET)
+        SDL_Delay(waitTime); // hold exec untill the specified ms has passed
 
-    deltaTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;
+    float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f; // diffrence between the time since the last frame and the current frame in seconds
 
-    projectilePosX += projectileVelX * deltaTime;
-    projectilePosY += projectileVelY * deltaTime;
+    ticksLastFrame = SDL_GetTicks(); // update the lastFrameTime time to be used in the next pass
+
+    // deltaTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;
+
+    projectilePos.x += projectileVel.x * deltaTime;
+    projectilePos.y += projectileVel.y * deltaTime;
 }
 
 void Game::Render()
 {
-    SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255); //setsup the given renderer to render a specific color
+    SDL_RenderClear(renderer);                         //clear back buffer with the specified color
 
-    SDL_Rect projectile{(int)projectilePosX, (int)projectilePosY, 10, 10};
+    SDL_Rect projectile{(int)projectilePos.x, (int)projectilePos.y, 10, 10}; // create rectangle
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &projectile);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); //setsup the given renderer to render a specific color
+    SDL_RenderFillRect(renderer, &projectile);            //draw the rectange with a given renderer
 
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer); // swap back and front buffer
 }
 
+//  cleaning after myself
 void Game::Destroy()
 {
     SDL_DestroyRenderer(renderer);

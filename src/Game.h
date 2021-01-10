@@ -9,8 +9,8 @@ class Game
 {
 private:
     bool isRunning;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
+    SDL_Window *window;     // the sdl frame
+    SDL_Renderer *renderer; // the sdl graphics renderer, (takes the window to render in)
 
 public:
     Game();

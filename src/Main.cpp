@@ -1,8 +1,9 @@
-#include <iostream>
 #include "./Constants.h"
 #include "./Game.h"
+#include <iostream>
 
-int main(int argc, char *arg[]) {
+int main(int argc, char *arg[])
+{
 
     Game *game = new Game();
 
