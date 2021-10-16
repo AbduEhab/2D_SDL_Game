@@ -1,5 +1,5 @@
 #include "./Game.h"
-#include "../lib/glm/glm.hpp"
+#include <glm/glm.hpp>
 #include "./Constants.h"
 #include <iostream>
 

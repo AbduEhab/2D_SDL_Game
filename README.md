@@ -38,3 +38,13 @@ Then run the make using
 > make -C ./build
 
 ---
+
+[submodule "external/SDL2_ttf"]
+	path = external/SDL2_ttf
+	url = https://github.com/libsdl-org/SDL_ttf.git
+[submodule "external/SDL2"]
+	path = external/SDL2
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "external/glm"]
+	path = external/glm
+	url = https://github.com/g-truc/glm.git
