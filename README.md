@@ -17,31 +17,17 @@ cmake -S . -B bin/win32/ -G "Visual Studio 16 2019"
 
 # Linux Systems
 
-Make sure that these (or similar) directories are included
+Get these packages form your package manager
 
-```javascript
-"${default}",
-  "lib/lua",
-  "/usr/include",
-  "/usr/local/include",
-  "${workspaceRoot}";
+> build-essential git lua
+
+Then update the submodules using these 2 lines
+
+```bash
+git submodule init
+git submodule update
 ```
 
-Then make sure all dependencies are installed
-
----
-
-https://github.com/libsdl-org/SDL.git
-
----
-
-Debian:
-
-> build-essential libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev liblua5.3-dev
-
-Arch:
-
-> build-essential sdl2 sdl2_image sdl2_mixer sdl2_ttf-git lua
 
 Run the following command to init cmake
 
@@ -49,6 +35,6 @@ Run the following command to init cmake
 
 Then run the make using
 
-> make -C ./build/linux
+> make -C ./build
 
 ---

@@ -5,8 +5,8 @@ project("SDL_GAME")
 add_subdirectory(src)
 
 add_subdirectory(
-    external/SDL
-    external/SDL_ttf
+    "external/SDL"
+    "external/SDL_ttf"
     )
 
 target_include_directories(${PROJECT_NAME}
