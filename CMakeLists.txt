@@ -4,20 +4,24 @@ project("SDL_GAME")
 
 add_subdirectory(src)
 
-find_package(SDL_ttf CONFIG REQUIRED)
 
-add_subdirectory(external/SDL2)
-add_subdirectory(external/SDL2_ttf) 
+
+add_subdirectory(external/SDL)
+add_subdirectory(external/SDL_ttf) 
 add_subdirectory(external/glm)
 
+SET(SDL2_ttf_DIR external/SDL_ttf)
+
+find_package(SDL2_ttf CONFIG REQUIRED)
+
 target_include_directories(${PROJECT_NAME}
-    PUBLIC external/SDL2/include
-    PUBLIC external/SDL2_ttf/include
+    PUBLIC external/SDL/include
+    PUBLIC external/SDL_ttf/include
 )
 
 target_link_directories(${PROJECT_NAME}
-    PRIVATE external/SDL2/src
-    PRIVATE external/SDL2_ttf
+    PRIVATE external/SDL/src
+    PRIVATE external/SDL_ttf
     PRIVATE ../external/glm
 )
 
