@@ -50,10 +50,10 @@ void Game::ProcessInput()
     switch (event.type)    // get event type and switch on it
     {
     case SDL_QUIT:         // escape key on the window
-        isRunning = false; //break game loop
+        isRunning = false; // break game loop
         break;
 
-    case SDL_KEYDOWN:                           // any key is pressed down
+    case SDL_KEYDOWN:                           // if any key is pressed down
         if (event.key.keysym.sym = SDLK_ESCAPE) // if this key is the Esc key
             isRunning = false;
         break;

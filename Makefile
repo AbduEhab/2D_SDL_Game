@@ -4,7 +4,7 @@ build:
 	-o game \
 	-I"./lib/lua" \
 	-L"./lib/lua" \
-	-llua5.3 \
+	-llua5.4 \
 	-lSDL2 \
 	-lSDL2_image \
 	-lSDL2_ttf \
