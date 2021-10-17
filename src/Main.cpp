@@ -1,3 +1,4 @@
+#define SDL_MAIN_HANDLED
 #include "./Constants.h"
 #include "./Game.h"
 #include <iostream>
