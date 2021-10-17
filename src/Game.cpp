@@ -5,22 +5,22 @@
 
 Game::Game()
 {
-    isRunning = false;
+    running = false;
 }
 
 Game::~Game()
 {
 }
 
-bool Game::IsRunning() const
+bool Game::isRunning() const
 {
-    return isRunning;
+    return running;
 }
 
 glm::vec2 projectilePos = glm::vec2(0.0f, 0.0f);
 glm::vec2 projectileVel = glm::vec2(20.0f, 20.0f);
 
-void Game::Initialize(int width, int height)    // init SDL
+void Game::initialize(int width, int height)    // init SDL
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -40,27 +40,27 @@ void Game::Initialize(int width, int height)    // init SDL
         return;
     }
 
-    isRunning = true;
+    running = true;
 }
 
-void Game::ProcessInput()
+void Game::processInput()
 {
     SDL_Event event;       // create the SDL event object
     SDL_PollEvent(&event); // tell SDL to track the event
     switch (event.type)    // get event type and switch on it
     {
     case SDL_QUIT:         // escape key on the window
-        isRunning = false; // break game loop
+        running = false; // break game loop
         break;
 
     case SDL_KEYDOWN:                           // if any key is pressed down
         if (event.key.keysym.sym = SDLK_ESCAPE) // if this key is the Esc key
-            isRunning = false;
+            running = false;
         break;
     }
 }
 
-void Game::Update()
+void Game::update()
 {
     // while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TIME_TARGET));
 
@@ -79,7 +79,7 @@ void Game::Update()
     projectilePos.y += projectileVel.y * deltaTime;
 }
 
-void Game::Render()
+void Game::render()
 {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255); //setsup the given renderer to render a specific color
     SDL_RenderClear(renderer);                         //clear back buffer with the specified color
@@ -93,7 +93,7 @@ void Game::Render()
 }
 
 //  cleaning after myself
-void Game::Destroy()
+void Game::destroy()
 {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

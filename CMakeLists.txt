@@ -4,6 +4,9 @@ project("SDL_GAME")
 
 add_subdirectory(src)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
+
 # add_subdirectory(external/SDL)
 # add_subdirectory(external/SDL_ttf) 
 # add_subdirectory(external/glm)
@@ -26,7 +29,7 @@ add_subdirectory(src)
 
 find_package(glm REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm)
+target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm lua)
 
 # include_directories(${GLM_INCLUDE_DIRS})
 # link_directories(${GLM_LIBRARY_DIRS})

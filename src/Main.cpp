@@ -8,16 +8,16 @@ int main(int argc, char *arg[])
 
     Game *game = new Game();
 
-    game->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    game->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    while (game->IsRunning())
+    while (game->isRunning())
     {
-        game->ProcessInput();
-        game->Update();
-        game->Render();
+        game->processInput();
+        game->update();
+        game->render();
     }
 
-    game->Destroy();
+    game->destroy();
 
     return 0;
 }

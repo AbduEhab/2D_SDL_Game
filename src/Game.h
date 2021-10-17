@@ -8,7 +8,7 @@
 class Game
 {
 private:
-    bool isRunning;
+    bool running;
     SDL_Window *window;     // the sdl frame
     SDL_Renderer *renderer; // the sdl graphics renderer, (takes the window to render in)
 
@@ -16,12 +16,12 @@ public:
     Game();
     ~Game();
     int ticksLastFrame;
-    bool IsRunning() const;
-    void Initialize(int width, int height);
-    void ProcessInput();
-    void Update();
-    void Render();
-    void Destroy();
+    bool isRunning() const;
+    void initialize(int width, int height);
+    void processInput();
+    void update();
+    void render();
+    void destroy();
 };
 
 #endif
