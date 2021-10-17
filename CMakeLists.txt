@@ -4,27 +4,30 @@ project("SDL_GAME")
 
 add_subdirectory(src)
 
+# add_subdirectory(external/SDL)
+# add_subdirectory(external/SDL_ttf) 
+# add_subdirectory(external/glm)
+# add_subdirectory(external/FreeType)
 
+# SET(SDL2_ttf_DIR external/SDL_ttf)
 
-add_subdirectory(external/SDL)
-add_subdirectory(external/SDL_ttf) 
-add_subdirectory(external/glm)
+# find_package(SDL2_ttf CONFIG REQUIRED)
 
-SET(SDL2_ttf_DIR external/SDL_ttf)
+# target_include_directories(${PROJECT_NAME}
+#     PUBLIC external/SDL/include
+#     PUBLIC external/SDL_ttf/include
+# )
 
-find_package(SDL2_ttf CONFIG REQUIRED)
+# target_link_directories(${PROJECT_NAME}
+#     PRIVATE ${PROJECT_SOURCE_DIR}/external/SDL/src
+#     PRIVATE ${PROJECT_SOURCE_DIR}/external/SDL_ttf
+#     PRIVATE ${PROJECT_SOURCE_DIR}/external/glm
+# )
 
-target_include_directories(${PROJECT_NAME}
-    PUBLIC external/SDL/include
-    PUBLIC external/SDL_ttf/include
-)
+find_package(glm REQUIRED)
 
-target_link_directories(${PROJECT_NAME}
-    PRIVATE external/SDL/src
-    PRIVATE external/SDL_ttf
-    PRIVATE ../external/glm
-)
+target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm)
 
-target_link_libraries(${PROJECT_NAME} SDL2 SDL2_ttf glm)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# include_directories(${GLM_INCLUDE_DIRS})
+# link_directories(${GLM_LIBRARY_DIRS})
+# add_definitions(${GLM_DEFINITIONS})
