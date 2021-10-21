@@ -25,6 +25,16 @@ public:
     void update(float deltaTime);
     void render();
     void destroy();
+
+    template <typename T, typename... TArgs>
+    T &addComponent(TArgs &&...args)
+    {
+        T *comp(new T(std::forward<TArgs>(args)...));
+        comp->owner = this;
+        comp->init();
+        components.push_back(comp);
+        return *comp;
+    }
 };
 
 #endif

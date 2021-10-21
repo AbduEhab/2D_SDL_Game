@@ -1,7 +1,12 @@
-#include "./Game.h"
 #include <glm/glm.hpp>
-#include "./Constants.h"
 #include <iostream>
+
+#include "./Constants.h"
+#include "./Game.h"
+#include "Components/Transform.h"
+
+EntityManager manager;
+SDL_Renderer *Game::renderer;
 
 Game::Game()
 {
@@ -17,10 +22,7 @@ bool Game::isRunning() const
     return running;
 }
 
-glm::vec2 projectilePos = glm::vec2(0.0f, 0.0f);
-glm::vec2 projectileVel = glm::vec2(20.0f, 20.0f);
-
-void Game::initialize(int width, int height)    // init SDL
+void Game::initialize(int width, int height) // init SDL
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -40,7 +42,16 @@ void Game::initialize(int width, int height)    // init SDL
         return;
     }
 
+    loadLevel(0);
+
     running = true;
+}
+
+void Game::loadLevel(int levelNumber)
+{
+    Entity &entity(manager.addEntity("first dot"));
+
+    entity.addComponent<Transform>(0, 0, 10, 10, 20, 20, 1);
 }
 
 void Game::processInput()
@@ -49,7 +60,7 @@ void Game::processInput()
     SDL_PollEvent(&event); // tell SDL to track the event
     switch (event.type)    // get event type and switch on it
     {
-    case SDL_QUIT:         // escape key on the window
+    case SDL_QUIT:       // escape key on the window
         running = false; // break game loop
         break;
 
@@ -62,8 +73,6 @@ void Game::processInput()
 
 void Game::update()
 {
-    // while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TIME_TARGET));
-
     float waitTime = FRAME_TIME_TARGET - (SDL_GetTicks() - ticksLastFrame); // calculate time to wait between frames
 
     if (waitTime > 0 && waitTime <= FRAME_TIME_TARGET)
@@ -73,21 +82,15 @@ void Game::update()
 
     ticksLastFrame = SDL_GetTicks(); // update the lastFrameTime time to be used in the next pass
 
-    // deltaTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;
-
-    projectilePos.x += projectileVel.x * deltaTime;
-    projectilePos.y += projectileVel.y * deltaTime;
+    manager.update(deltaTime);
 }
 
 void Game::render()
 {
-    SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255); //setsup the given renderer to render a specific color
+    SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255); //set up the given renderer to render a specific color
     SDL_RenderClear(renderer);                         //clear back buffer with the specified color
 
-    SDL_Rect projectile{(int)projectilePos.x, (int)projectilePos.y, 10, 10}; // create rectangle
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); //setsup the given renderer to render a specific color
-    SDL_RenderFillRect(renderer, &projectile);            //draw the rectange with a given renderer
+    manager.render();
 
     SDL_RenderPresent(renderer); // swap back and front buffer
 }

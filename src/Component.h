@@ -9,10 +9,10 @@ class Component
 {
 public:
     Entity *owner;
-    virtual ~Component();
-    virtual void init();
-    virtual void update(float deltaTime);
-    virtual void Render();
+    ~Component();
+    virtual void init() = 0;
+    virtual void update(float deltaTime) = 0;
+    virtual void render() = 0;
 };
 
 #endif

@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+class Entity;
+
 class EntityManager
 {
 private:
