@@ -1,9 +1,5 @@
 # 2D_GameEngine
 
-MSBuild.exe .\bin\win32\SDL_GAME.sln
-
-cmake -S . -B bin/win32/ -G "Visual Studio 16 2019"
-
 ## Technologies
 
 - `C++ 11`
@@ -17,17 +13,20 @@ cmake -S . -B bin/win32/ -G "Visual Studio 16 2019"
 
 # Linux Systems
 
-Make sure that these (or similar) directories are included
 
-```javascript
-"${default}",
-  "lib/lua",
-  "/usr/include",
-  "/usr/local/include",
-  "${workspaceRoot}";
+Make sure all dependencies are installed
+
+Debian:
+```bash
+sudo apt install build-essential sdl2 sdl2-image sdl2-ttf sdl2-mixer
 ```
 
-Then make sure all dependencies are installed
+Arch:
+```bash
+sudo pacman -S build-essential sdl2 sdl2_image sdl2_mixer sdl2_ttf-git
+```
+
+If the submodules don't work for whatever reason, you can install these dependancies and compile with them
 
 Debian:
 ```bash
@@ -45,6 +44,6 @@ Now run the following command to init cmake
 
 Then run make using
 
-> make -C ./build/linux
+> make -C ./build
 
 ---
