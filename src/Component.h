@@ -1,18 +1,27 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#pragma once
 
 #include "Entity.h"
+#include <string>
 
 class Entity;
 
 class Component
 {
 public:
-    Entity *owner;
-    ~Component();
-    virtual void init() = 0;
-    virtual void update(float deltaTime) = 0;
-    virtual void render() = 0;
-};
+    Entity *owner_;
+    ~Component() {}
+    virtual void Initialize() {}
+    virtual void Update(float delta_time) = 0;
+    virtual void Render() {}
 
-#endif
+    virtual std::string ToString()
+    {
+        return std::string("Method Not Implemented");
+    }
+
+protected:
+    virtual std::string toString(std::string name)
+    {
+        return std::string("Component<" + name + ">\n");
+    }
+};

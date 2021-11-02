@@ -26,6 +26,12 @@ Arch:
 sudo pacman -S build-essential sdl2 sdl2_image sdl2_mixer sdl2_ttf-git
 ```
 
+Download/update the submodules
+```bash
+git submodule sync
+git submodule update --init --recursive
+```
+
 If the submodules don't work for whatever reason, you can install these dependancies and compile with them
 
 Debian:

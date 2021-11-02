@@ -1,5 +1,4 @@
-#ifndef COMPONENTMANAGER_H
-#define COMPONENTMANAGER_H
+#pragma once
 
 #include "Component.h"
 #include "Entity.h"
@@ -11,16 +10,14 @@ class Entity;
 class EntityManager
 {
 private:
-    std::vector<Entity *> entities;
+    std::vector<Entity *> entities_;
 
 public:
-    void update(float deltaTime);
-    void render();
-    uint32_t size();
-    bool isEmpty();
-    Entity &addEntity(std::string entityName);
-    std::vector<Entity *> getEntities() const;
-    bool clear();
+    void Update(float delta_time);
+    void Render();
+    uint32_t Size();
+    bool IsEmpty();
+    Entity &AddEntity(std::string entity_name);
+    std::vector<Entity *> get_entities() const;
+    bool Clear();
 };
-
-#endif
