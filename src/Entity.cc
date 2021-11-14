@@ -36,6 +36,14 @@ bool Entity::IsActive() const
     return this->is_active_;
 }
 
+void Entity::ListAllComponents()
+{
+    for (auto &component : components_by_types_)
+    {
+        std::cout << std::string("  Component<") + component.first->name() + ">" << std::endl;
+    }
+}
+
 std::string Entity::ToString()
 {
     std::string s;
@@ -44,8 +52,8 @@ std::string Entity::ToString()
 
     for (auto &component : components_)
     {
-        s = s.append("\t") + component->ToString();
+        s = s.append("\t") + component->ToString() + "\n";
     }
 
-    return s + "\n";
+    return s;
 }

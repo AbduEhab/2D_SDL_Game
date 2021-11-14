@@ -15,6 +15,13 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
+# target_precompile_headers(${PROJECT_NAME} )
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+     $<$<CONFIG:Debug>:DEBUG_ONLY=1>
+     $<$<CONFIG:RelWithDebInfo>:DEBUG_ONLY=1>
+)
+
 add_subdirectory(
      external/sdl
      external/sdl_mixer
@@ -42,7 +49,7 @@ target_link_directories(${PROJECT_NAME}
      PRIVATE external/sdl_mixer
      PRIVATE external/sdl_image
      PRIVATE external/sdl_ttf
-     PRIVATE external/glm
+     PRIVATE external/glm/glm
 )
 
 target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm lua)

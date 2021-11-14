@@ -23,6 +23,7 @@ public:
     std::string name_;
     Entity(EntityManager &manager);
     Entity(EntityManager &manager, std::string name);
+    void ListAllComponents();
     bool IsActive() const;
     void Update(float delta_time);
     void Render();

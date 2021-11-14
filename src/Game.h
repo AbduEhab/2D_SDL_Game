@@ -1,5 +1,10 @@
 #pragma once
 
+#define DEBUG(x)    \
+                    \
+    if (DEBUG_ONLY) \
+        x;
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -20,7 +25,7 @@ private:
 public:
     Game();
     ~Game();
-    static AssetManager* asset_manager;
+    static AssetManager *asset_manager;
     int ticks_last_frame;
     bool IsRunning() const;
     static SDL_Renderer *renderer_; // the sdl graphics renderer

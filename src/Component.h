@@ -22,6 +22,6 @@ public:
 protected:
     virtual std::string toString(std::string name)
     {
-        return std::string("Component<" + name + ">\n");
+        return std::string("Component<" + name + ">");
     }
 };

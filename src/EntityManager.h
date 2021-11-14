@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include <string>
 #include <vector>
+#include <iostream>
 
 class Entity;
 
@@ -19,5 +20,6 @@ public:
     bool IsEmpty();
     Entity &AddEntity(std::string entity_name);
     std::vector<Entity *> get_entities() const;
+    void ListAllEntities();
     bool Clear();
 };
