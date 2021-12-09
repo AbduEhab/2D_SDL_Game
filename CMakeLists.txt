@@ -41,27 +41,27 @@ add_subdirectory(
 )
 
 include_directories(
-     PUBLIC ${CMAKE_SOURCE_DIR}/external/sdl/include
-     PUBLIC ${CMAKE_SOURCE_DIR}/external/sdl_mixer/include
-     PUBLIC ${CMAKE_SOURCE_DIR}/external/sdl_image
-     PUBLIC ${CMAKE_SOURCE_DIR}/external/sdl_ttf
-     PUBLIC ${CMAKE_SOURCE_DIR}/external/glm/glm
+     PUBLIC external/sdl/include
+     PUBLIC external/sdl_mixer/include
+     PUBLIC external/sdl_image
+     PUBLIC external/sdl_ttf
+     PUBLIC external/glm/glm
 )
 
 target_include_directories(${PROJECT_NAME}
-     PUBLIC ${CMAKE_SOURCE_DIR}/external/sdl/include
-     PUBLIC ${CMAKE_SOURCE_DIR}/external/sdl_mixer/include
-     PUBLIC ${CMAKE_SOURCE_DIR}/external/sdl_image
-     PUBLIC ${CMAKE_SOURCE_DIR}/external/sdl_ttf
-     PUBLIC ${CMAKE_SOURCE_DIR}/external/glm/glm
+     PUBLIC external/sdl/include
+     PUBLIC external/sdl_mixer/include
+     PUBLIC external/sdl_image
+     PUBLIC external/sdl_ttf
+     PUBLIC external/glm/glm
 )
 
 target_link_directories(${PROJECT_NAME}
-     PRIVATE ${CMAKE_SOURCE_DIR}/build/external/external/sdl
-     PRIVATE ${CMAKE_SOURCE_DIR}/build/external/external/sdl_mixer
-     PRIVATE ${CMAKE_SOURCE_DIR}/build/external/external/sdl_image
-     PRIVATE ${CMAKE_SOURCE_DIR}/build/external/external/sdl_ttf
-     PRIVATE ${CMAKE_SOURCE_DIR}/build/external/external/glm
+     PRIVATE build/external/external/sdl
+     PRIVATE build/external/external/sdl_mixer
+     PRIVATE build/external/external/sdl_image
+     PRIVATE build/external/external/sdl_ttf
+     PRIVATE build/external/external/glm
 )
 
 target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm lua)
