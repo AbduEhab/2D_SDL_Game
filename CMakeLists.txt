@@ -18,6 +18,7 @@ include(CPack)
 target_compile_definitions(${PROJECT_NAME} PRIVATE
      $<$<CONFIG:Debug>:DEBUG_ONLY=1>
      $<$<CONFIG:RelWithDebInfo>:DEBUG_ONLY=1>
+     $<$<CONFIG:Release>:DEBUG_ONLY=0>
 )
 
 add_subdirectory(
@@ -38,14 +39,6 @@ add_subdirectory(
 
 add_subdirectory(
      external/glm
-)
-
-include_directories(
-     PUBLIC external/sdl/include
-     PUBLIC external/sdl_mixer/include
-     PUBLIC external/sdl_image
-     PUBLIC external/sdl_ttf
-     PUBLIC external/glm/glm
 )
 
 target_include_directories(${PROJECT_NAME}
