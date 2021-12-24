@@ -1,8 +1,8 @@
 #include "EntityManager.h"
 
-void EntityManager::Render()
+void EntityManager::Render() const
 {
-    for (auto &entity : entities_)
+    for (auto &entity : _entities)
     {
         entity->Render();
     }
@@ -10,7 +10,7 @@ void EntityManager::Render()
 
 void EntityManager::Update(float delta_time)
 {
-    for (auto &entity : entities_)
+    for (auto &entity : _entities)
     {
         entity->Update(delta_time);
     }
@@ -18,7 +18,7 @@ void EntityManager::Update(float delta_time)
 
 bool EntityManager::Clear()
 {
-    for (auto &entity : entities_)
+    for (auto &entity : _entities)
     {
         entity->Destroy();
     }
@@ -26,31 +26,36 @@ bool EntityManager::Clear()
     return true;
 }
 
-uint32_t EntityManager::Size()
+size_t EntityManager::Size() const
 {
-    return entities_.size();
+    return _entities.size();
 }
 
 Entity &EntityManager::AddEntity(std::string entity_name)
 {
     Entity *entity = new Entity(*this, entity_name);
 
-    entities_.emplace_back(entity);
+    _entities.emplace_back(entity);
 
     return *entity;
 }
 
-std::vector<Entity *> EntityManager::get_entities() const
+bool EntityManager::IsEmpty() const
 {
-    return entities_;
+    return _entities.size() == 0;
 }
 
-void EntityManager::ListAllEntities()
+auto EntityManager::get_entities() const
+{
+    return _entities;
+}
+
+void EntityManager::ListAllEntities() const
 {
 
     std::cout << "EntityManager<EntityDump>:\n----" << std::endl;
 
-    for (auto entity : entities_)
+    for (auto entity : _entities)
     {
         std::cout << entity->name_ << std::endl;
         entity->ListAllComponents();

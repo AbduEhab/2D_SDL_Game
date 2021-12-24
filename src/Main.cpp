@@ -1,11 +1,10 @@
-#include "./Constants.h"
-#include "./Game.h"
-#include <iostream>
+#include "Constants.h"
+#include "Game.h"
 
 int main(int argc, char *arg[])
 {
 
-    Game *game = new Game();
+    Game* game = new Game();
 
     game->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -15,8 +14,6 @@ int main(int argc, char *arg[])
         game->Update();
         game->Render();
     }
-
-    game->Destroy();
 
     return 0;
 }

@@ -1,9 +1,6 @@
 #pragma once
 
-#define DEBUG(x)    \
-                    \
-    if (DEBUG_ONLY) \
-        x;
+#include "Constants.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -19,17 +16,18 @@ class AssetManager;
 class Game
 {
 private:
-    bool is_running_;
-    SDL_Window *window_; // the sdl frame
+    bool _is_running;
+    SDL_Window *_window; // the sdl frame
+    SDL_Event _event;
 
 public:
     Game();
     ~Game();
     static AssetManager *asset_manager;
     int ticks_last_frame;
-    bool IsRunning() const;
-    static SDL_Renderer *renderer_; // the sdl graphics renderer
-    void LoadLevel(int level_number);
+    [[NODISCARD]] bool IsRunning() const;
+    static SDL_Renderer *renderer; // the sdl graphics renderer
+    void LoadLevel(int level_number) const;
     void Initialize(int width, int height);
     void ProcessInput();
     void Update();

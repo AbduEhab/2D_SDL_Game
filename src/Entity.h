@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Constants.h"
+
 #include "Component.h"
 #include "EntityManager.h"
 
@@ -11,7 +13,7 @@
 class Component;
 class EntityManager;
 
-class Entity
+class [[NODISCARD]] Entity
 {
 private:
     EntityManager &manager_;
@@ -24,7 +26,7 @@ public:
     Entity(EntityManager &manager);
     Entity(EntityManager &manager, std::string name);
     void ListAllComponents();
-    bool IsActive() const;
+    [[NODISCARD]] bool IsActive() const;
     void Update(float delta_time);
     void Render();
     void Destroy();
@@ -32,10 +34,10 @@ public:
     std::string ToString();
 
     template <typename T, typename... TArgs>
-    T &AddComponent(TArgs &&...args)
+    [[NODISCARD]] T &AddComponent(TArgs &&...args) 
     {
         T *comp(new T(std::forward<TArgs>(args)...));
-        comp->owner_ = this;
+        comp->_owner = this;
         comp->Initialize();
         components_.emplace_back(comp);
         components_by_types_[&typeid(*comp)] = comp;
@@ -43,7 +45,7 @@ public:
     }
 
     template <typename T>
-    T *get_component()
+    [[NODISCARD]] T *get_component()
     {
         return static_cast<T *>(components_by_types_[&typeid(T)]);
     }

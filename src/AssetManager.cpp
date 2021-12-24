@@ -1,20 +1,20 @@
 #include "AssetManager.h"
 
-AssetManager::AssetManager(EntityManager *manager) : manager_(manager)
+AssetManager::AssetManager(EntityManager *manager) : _manager(manager)
 {
 }
 
 void AssetManager::Clear()
 {
-    textures_.clear();
+    _textures.clear();
 }
 
 void AssetManager::AddTexture(std::string texture_id, const char *texture_file)
 {
-    textures_.emplace(texture_id, TextureManager::LoadTexture(texture_file));
+    _textures.emplace(texture_id, TextureManager::LoadTexture(texture_file));
 }
 
 SDL_Texture *AssetManager::get_texture(std::string texture_id)
 {
-    return textures_[texture_id];
+    return _textures[texture_id];
 }

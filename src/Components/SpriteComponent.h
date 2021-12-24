@@ -26,7 +26,7 @@ public:
 
     void Initialize()
     {
-        transform_ = owner_->get_component<TransformComponent>();
+        transform_ = _owner->get_component<TransformComponent>();
         sourceRect_.x = 0;
         sourceRect_.y = 0;
         sourceRect_.w = transform_->width_;
