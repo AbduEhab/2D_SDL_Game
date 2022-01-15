@@ -16,37 +16,43 @@ class EntityManager;
 class [[NODISCARD]] Entity
 {
 private:
-    EntityManager &manager_;
+    EntityManager &_manager;
     bool is_active_;
-    std::vector<Component *> components_;
-    std::map<const std::type_info *, Component *> components_by_types_;
+    std::vector<Component *> _components;
+    std::map<const std::type_info *, Component *> _components_by_types;
 
 public:
     std::string name_;
     Entity(EntityManager &manager);
     Entity(EntityManager &manager, std::string name);
-    void ListAllComponents();
+    void ListAllComponents(std::string indentation = "") const;
     [[NODISCARD]] bool IsActive() const;
     void Update(float delta_time);
-    void Render();
+    void Render() const;
     void Destroy();
 
     std::string ToString();
 
     template <typename T, typename... TArgs>
-    [[NODISCARD]] T &AddComponent(TArgs &&...args) 
+    [[NODISCARD]] constexpr T &AddComponent(TArgs &&...args)
     {
         T *comp(new T(std::forward<TArgs>(args)...));
         comp->_owner = this;
         comp->Initialize();
-        components_.emplace_back(comp);
-        components_by_types_[&typeid(*comp)] = comp;
+        _components.emplace_back(comp);
+        _components_by_types[&typeid(*comp)] = comp;
         return *comp;
     }
 
     template <typename T>
-    [[NODISCARD]] T *get_component()
+    [[NODISCARD]] constexpr T *get_component()
     {
-        return static_cast<T *>(components_by_types_[&typeid(T)]);
+        return static_cast<T *>(_components_by_types[&typeid(T)]);
+    }
+
+    template <typename T>
+    [[NODISCARD]] constexpr bool HasComponent()
+    {
+        return !(_components_by_types[&typeid(T)] == nullptr);
     }
 };

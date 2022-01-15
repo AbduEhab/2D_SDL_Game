@@ -56,7 +56,9 @@ void Game::LoadLevel(int level_number) const
     entity.AddComponent<TransformComponent>(0, 0, 10, 10, 20, 20, 1);
     entity.AddComponent<SpriteComponent>("tank-right");
 
-    Debug(manager.ListAllEntities())
+    Debug(manager.ListAllEntities());
+
+    std::cout << entity.HasComponent<TransformComponent>() << std::endl;
 }
 
 void Game::ProcessInput()

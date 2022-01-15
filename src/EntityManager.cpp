@@ -53,15 +53,15 @@ auto EntityManager::get_entities() const
 void EntityManager::ListAllEntities() const
 {
 
-    std::cout << "EntityManager<EntityDump>:\n----" << std::endl;
+    std::cout << "EntityManager<EntityDump>:\n{" << std::endl;
 
     for (auto entity : _entities)
     {
-        std::cout << entity->name_ << std::endl;
-        entity->ListAllComponents();
+        std::cout << "\t" << entity->name_ << "\n\t{" << std::endl;
+        entity->ListAllComponents("\t\t");
 
-        std::cout << std::endl;
+        std::cout << "\t}" << std::endl;
     }
 
-    std::cout << "----" << std::endl;
+    std::cout << "}" << std::endl;
 }

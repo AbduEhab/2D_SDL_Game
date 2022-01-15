@@ -62,8 +62,8 @@ endif()
 #----------------------------------------------------------------------------------------------
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(TARGET ${PROJECT_NAME} CMAKE_CXX_STANDARD 17)
-set(TARGET ${PROJECT_NAME} CMAKE_CXX_STANDARD_REQUIRED on)
+# set(TARGET ${PROJECT_NAME} CMAKE_CXX_STANDARD 17)
+# set(TARGET ${PROJECT_NAME} CMAKE_CXX_STANDARD_REQUIRED on)
 
 # include(CTest)
 # enable_testing()
@@ -103,15 +103,15 @@ target_include_directories(${PROJECT_NAME}
      PUBLIC external/sdl_mixer/include
      PUBLIC external/sdl_image
      PUBLIC external/sdl_ttf
-     PUBLIC external/glm/glm
+     PUBLIC external/glm
 )
 
 target_link_directories(${PROJECT_NAME}
-     PRIVATE build/external/external/sdl
-     PRIVATE build/external/external/sdl_mixer
-     PRIVATE build/external/external/sdl_image
-     PRIVATE build/external/external/sdl_ttf
-     PRIVATE build/external/external/glm
+     PRIVATE external/external/sdl
+     PRIVATE external/external/sdl_mixer
+     PRIVATE external/external/sdl_image
+     PRIVATE external/external/sdl_ttf
+     PRIVATE external/external/glm
 )
 
 target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm lua)
