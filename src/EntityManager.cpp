@@ -45,7 +45,7 @@ bool EntityManager::IsEmpty() const
     return _entities.size() == 0;
 }
 
-auto EntityManager::get_entities() const
+std::vector<Entity *> EntityManager::get_entities() const
 {
     return _entities;
 }

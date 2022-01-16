@@ -24,13 +24,13 @@ public:
     Game();
     ~Game();
     static AssetManager *asset_manager;
-    int ticks_last_frame;
+    TimePoint ticks_last_frame;
     [[NODISCARD]] bool IsRunning() const;
     static SDL_Renderer *renderer; // the sdl graphics renderer
     void LoadLevel(int level_number) const;
     void Initialize(int width, int height);
     void ProcessInput();
-    void Update();
+    void Update(float delta_time);
     void Render();
     void Destroy();
 };

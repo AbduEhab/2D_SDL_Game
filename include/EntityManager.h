@@ -16,7 +16,7 @@ public:
     [[NODISCARD]] size_t Size() const;
     [[NODISCARD]] bool IsEmpty() const;
     [[NODISCARD]] Entity &AddEntity(std::string entity_name);
-    [[NODISCARD]] auto get_entities() const;
+    [[NODISCARD]] std::vector<Entity *> get_entities() const;
     void ListAllEntities() const;
     bool Clear();
 };

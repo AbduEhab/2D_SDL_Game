@@ -48,12 +48,12 @@ std::string Entity::ToString()
 {
     std::string s;
 
-    s = s.append("  ") + name_ + ":\n";
+    s = s.append("  ") + name_ + ":\n{";
 
     for (auto &component : _components)
     {
         s = s.append("\t") + component->ToString() + "\n";
     }
 
-    return s;
+    return s + "}";
 }

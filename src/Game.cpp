@@ -50,15 +50,15 @@ void Game::Initialize(int width, int height) // init SDL
 
 void Game::LoadLevel(int level_number) const
 {
-    asset_manager->AddTexture("tank-right", "../../assets/images/tank-big-right.png");
+    asset_manager->AddTexture("tank-right", "../assets/images/tank-big-right.png");
 
     Entity &entity(manager.AddEntity("first dot"));
-    entity.AddComponent<TransformComponent>(0, 0, 10, 10, 20, 20, 1);
+    entity.AddComponent<TransformComponent>(0, 10, 10, 10, 20, 20, 1);
     entity.AddComponent<SpriteComponent>("tank-right");
 
     Debug(manager.ListAllEntities());
 
-    std::cout << entity.HasComponent<TransformComponent>() << std::endl;
+    DebugPrint(entity.HasComponent<TransformComponent>());
 }
 
 void Game::ProcessInput()
@@ -78,18 +78,13 @@ void Game::ProcessInput()
     }
 }
 
-void Game::Update()
+void Game::Update(float delta_time)
 {
-    float waitTime = FRAME_TIME_TARGET - (SDL_GetTicks() - ticks_last_frame); // calculate time to wait between frames
-
-    if (waitTime > 0 && waitTime <= FRAME_TIME_TARGET)
-        SDL_Delay(waitTime); // hold exec untill the specified ms has passed
-
-    float delta_time = (SDL_GetTicks() - ticks_last_frame) / 1000.0f; // diffrence between the time since the last frame and the current frame in seconds
-
-    ticks_last_frame = SDL_GetTicks(); // update the lastFrameTime time to be used in the next pass
 
     manager.Update(delta_time);
+
+
+    DebugPrint(manager.get_entities()[0]->get_component<TransformComponent>()->ToString());
 }
 
 void Game::Render()

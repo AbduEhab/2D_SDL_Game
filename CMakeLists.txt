@@ -78,6 +78,11 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
      $<$<CONFIG:Release>:NDEBUG=1>
 )
 
+
+
+# file(COPY ${CMAKE_CURRENT_BINARY_DIR}/src/${PROJECT_NAME}
+#      DESTINATION ${CMAKE_SOURCE_DIR}/bin/linux/)
+
 add_subdirectory(
      external/sdl
 )
@@ -104,6 +109,7 @@ target_include_directories(${PROJECT_NAME}
      PUBLIC external/sdl_image
      PUBLIC external/sdl_ttf
      PUBLIC external/glm
+     PUBLIC include/
 )
 
 target_link_directories(${PROJECT_NAME}
@@ -115,3 +121,4 @@ target_link_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm lua)
+

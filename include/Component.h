@@ -17,10 +17,4 @@ public:
     {
         return std::string("Method Not Implemented");
     }
-
-protected:
-    virtual std::string toString(std::string name)
-    {
-        return std::string("Component<" + name + ">");
-    }
 };
