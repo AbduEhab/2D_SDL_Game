@@ -2,10 +2,10 @@
 
 ## Technologies
 
-- `C++ 11`
+- `C++14`
 - `SDL2`
 - `Lua`
-- `Glm`
+- `glm`
 
 ---
 
@@ -13,6 +13,9 @@
 
 # Linux Systems
 
+> sdl's 'SDL_GetTicks()' has been very ify, it throws numbers in the millions every now and then which screws with the DeltaTime. I've implemented a temporary fix with the 'chrono' clock.
+
+> Note that sdl2 has also been refusing to compile for me for a couple of days now due to a problem with Wayland. This project will be put on hold till I figure out how to fix it.
 
 Make sure all dependencies are installed
 
@@ -26,7 +29,7 @@ Arch:
 sudo pacman -S build-essential sdl2 sdl2_image sdl2_mixer sdl2_ttf-git
 ```
 
-Download/update the submodules
+Download/update the submodules (cmake will get them automatically now)
 ```bash
 git submodule sync
 git submodule update --init --recursive

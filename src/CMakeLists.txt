@@ -1,13 +1,36 @@
 cmake_minimum_required (VERSION 3.8)
 
 add_executable(${PROJECT_NAME}
-    Main.cc
-    Game.cc
-    Entity.cc
-    EntityManager.cc
-    TextureManager.cc
-    AssetManager.cc
+    Main.cpp
+    Game.cpp
+    Entity.cpp
+    EntityManager.cpp
+    TextureManager.cpp
+    AssetManager.cpp
 
+)
+
+# Copy Binary to DEV specified location
+add_custom_command(
+     TARGET ${PROJECT_NAME} POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E copy
+          ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
+          ${CMAKE_SOURCE_DIR}/bin/
+)
+
+# Set a symbolic link so the binary can find a required relative folder
+set(link_src "${CMAKE_SOURCE_DIR}/assets")
+if(UNIX AND NOT APPLE) 
+    set(link_dst "${CMAKE_CURRENT_BINARY_DIR}/../assets") 
+else() 
+    set(link_dst "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/../assets") 
+endif() 
+
+add_custom_command( 
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E create_symlink ${link_src} ${link_dst} 
+    DEPENDS ${link_dst} 
+    COMMENT "symbolic link ${link_src} => ${link_dst}" 
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
