@@ -68,6 +68,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # include(CTest)
 # enable_testing()
 
+
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
@@ -83,20 +85,21 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 # file(COPY ${CMAKE_CURRENT_BINARY_DIR}/src/${PROJECT_NAME}
 #      DESTINATION ${CMAKE_SOURCE_DIR}/bin/linux/)
 
+
+# add_subdirectory(
+#      external/freetype
+# )
+
 # add_subdirectory(
 #      external/sdl
 # )
 
 add_subdirectory(
-     external/freetype
+     external/sdl_image
 )
 
 add_subdirectory(
      external/sdl_mixer
-)
-
-add_subdirectory(
-     external/sdl_image
 )
 
 add_subdirectory(
@@ -124,5 +127,5 @@ target_link_directories(${PROJECT_NAME}
      PRIVATE external/external/glm
 )
 
-target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm freetype)
+target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm)
 

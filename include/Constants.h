@@ -5,8 +5,8 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <vector>
 #include <thread>
+#include <vector>
 
 // namespace Engine
 // {
@@ -21,7 +21,7 @@
 #define WINDOW_HEIGHT 600
 
 #define FPS 30
-#define FRAME_TIME_TARGET (1000.0f / FPS)
+constexpr inline float FRAME_TIME_TARGET = (1000.0f / FPS);
 
 using Clock = std::chrono::high_resolution_clock;
 using TimePoint = std::chrono::_V2::system_clock::time_point;
@@ -29,7 +29,7 @@ using TimePoint = std::chrono::_V2::system_clock::time_point;
 #ifdef DEBUG
 #define Debug(x) x
 #define DebugPrint(x) \
-    std::cout << x << std::endl
+    std::cout << (x) << std::endl
 #endif // DEBUG
 
 #ifdef NDEBUG

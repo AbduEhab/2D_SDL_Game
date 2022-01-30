@@ -55,10 +55,6 @@ void Game::LoadLevel(int level_number) const
     Entity &entity(manager.AddEntity("first dot"));
     entity.AddComponent<TransformComponent>(0, 10, 10, 10, 20, 20, 1);
     entity.AddComponent<SpriteComponent>("tank-right");
-
-    Debug(manager.ListAllEntities());
-
-    DebugPrint(entity.HasComponent<TransformComponent>());
 }
 
 void Game::ProcessInput()
@@ -78,14 +74,24 @@ void Game::ProcessInput()
     }
 }
 
+inline TimePoint time_s = Clock::now();
+inline uint8_t frames = 0;
+
 void Game::Update(float delta_time)
 {
-    {
-        SDL_SetWindowTitle(_window, std::to_string(delta_time).c_str());
-    }
     manager.Update(delta_time);
 
-    DebugPrint(manager.get_entities()[0]->get_component<TransformComponent>()->ToString());
+    bool res = (Clock::now() - time_s).count() * 1e-9 >= 1;
+
+    if (res)
+    {
+        SDL_SetWindowTitle(_window, (std::to_string(frames).append(" | ").append(std::to_string(delta_time))).c_str());
+        DebugPrint(manager.get_entities()[0]->get_component<TransformComponent>()->ToString());
+        time_s = Clock::now();
+        frames = 0;
+    }
+
+    frames++;
 }
 
 void Game::Render()
