@@ -30,7 +30,7 @@ void Game::Initialize(int width, int height) // init SDL
         std::cerr << "Error init sdl." << std::endl;
         return;
     }
-    _window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_BORDERLESS);
+    _window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_RESIZABLE);
     if (!_window)
     {
         std::cerr << "error with window." << std::endl;
@@ -80,9 +80,10 @@ void Game::ProcessInput()
 
 void Game::Update(float delta_time)
 {
-
+    {
+        SDL_SetWindowTitle(_window, std::to_string(delta_time).c_str());
+    }
     manager.Update(delta_time);
-
 
     DebugPrint(manager.get_entities()[0]->get_component<TransformComponent>()->ToString());
 }
