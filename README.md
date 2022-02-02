@@ -2,7 +2,7 @@
 
 ## Technologies
 
-- `C++14`
+- `C++20`
 - `SDL2`
 - `Lua`
 - `glm`
@@ -15,7 +15,7 @@
 
 > sdl's 'SDL_GetTicks()' has been very ify, it throws numbers in the millions every now and then which screws with the DeltaTime. I've implemented a temporary fix with the 'chrono' clock.
 
-> Note that sdl2 has also been refusing to compile for me for a couple of days now due to a problem with Wayland. This project will be put on hold till I figure out how to fix it.
+> Note that sdl2 has also been refusing to compile for me for a couple of days now due to a problem with Wayland. I've resorted to using the system SDL lib instead of my compiled one. 
 
 Make sure all dependencies are installed
 
@@ -35,7 +35,7 @@ git submodule sync
 git submodule update --init --recursive
 ```
 
-If the submodules don't work for whatever reason, you can install these dependancies and compile with them
+If the submodules don't work for whatever reason, you can install these dependancies and compile with them. (remove the `add_subdirectory()` calls from the ./CmakeLists if you're gonna use these system libs)
 
 Debian:
 ```bash
