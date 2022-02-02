@@ -9,15 +9,6 @@ EntityManager manager;
 AssetManager *Game::asset_manager = new AssetManager(&manager);
 SDL_Renderer *Game::renderer;
 
-Game::Game()
-{
-    _is_running = false;
-}
-
-Game::~Game()
-{
-}
-
 [[NODISCARD]] bool Game::IsRunning() const
 {
     return _is_running;
@@ -74,8 +65,8 @@ void Game::ProcessInput()
     }
 }
 
-inline TimePoint time_s = Clock::now();
-inline uint8_t frames = 0;
+static inline TimePoint time_s = Clock::now();
+static inline uint8_t frames = 0;
 
 void Game::Update(float delta_time)
 {
@@ -83,7 +74,7 @@ void Game::Update(float delta_time)
 
     bool res = (Clock::now() - time_s).count() * 1e-9 >= 1;
 
-    if (res)
+    if (res) _unlikely
     {
         SDL_SetWindowTitle(_window, (std::to_string(frames).append(" | ").append(std::to_string(delta_time))).c_str());
         DebugPrint(manager.get_entities()[0]->get_component<TransformComponent>()->ToString());

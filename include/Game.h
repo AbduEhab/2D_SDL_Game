@@ -16,15 +16,15 @@ class AssetManager;
 class Game
 {
 private:
-    bool _is_running;
+    bool _is_running = false;
     SDL_Window *_window; // the sdl frame
     SDL_Event _event;
 
 public:
-    Game();
-    ~Game();
+    Game() = default;
+
     static AssetManager *asset_manager;
-    TimePoint ticks_last_frame;
+    
     [[NODISCARD]] bool IsRunning() const;
     static SDL_Renderer *renderer; // the sdl graphics renderer
     void LoadLevel(int level_number) const;
