@@ -58,7 +58,7 @@ public:
             _transform->_velocity.y = 10;
         }
     }
-
+    
     void Render()
     {
         TextureManager::Draw(_texture, _sourceRect, _destiationRect, _flip);

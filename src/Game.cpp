@@ -9,15 +9,6 @@ EntityManager manager;
 AssetManager *Game::asset_manager = new AssetManager(&manager);
 SDL_Renderer *Game::renderer;
 
-Game::Game()
-{
-    _is_running = false;
-}
-
-Game::~Game()
-{
-}
-
 [[NODISCARD]] bool Game::IsRunning() const
 {
     return _is_running;
@@ -30,7 +21,7 @@ void Game::Initialize(int width, int height) // init SDL
         std::cerr << "Error init sdl." << std::endl;
         return;
     }
-    _window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_BORDERLESS);
+    _window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_RESIZABLE);
     if (!_window)
     {
         std::cerr << "error with window." << std::endl;
@@ -55,10 +46,6 @@ void Game::LoadLevel(int level_number) const
     Entity &entity(manager.AddEntity("first dot"));
     entity.AddComponent<TransformComponent>(0, 10, 10, 10, 20, 20, 1);
     entity.AddComponent<SpriteComponent>("tank-right");
-
-    Debug(manager.ListAllEntities());
-
-    DebugPrint(entity.HasComponent<TransformComponent>());
 }
 
 void Game::ProcessInput()
@@ -78,13 +65,24 @@ void Game::ProcessInput()
     }
 }
 
+static inline TimePoint time_s = Clock::now();
+static inline uint8_t frames = 0;
+
 void Game::Update(float delta_time)
 {
-
     manager.Update(delta_time);
 
+    bool res = (Clock::now() - time_s).count() * 1e-9 >= 1;
 
-    DebugPrint(manager.get_entities()[0]->get_component<TransformComponent>()->ToString());
+    if (res) _unlikely
+    {
+        SDL_SetWindowTitle(_window, (std::to_string(frames).append(" | ").append(std::to_string(delta_time))).c_str());
+        DebugPrint(manager.get_entities()[0]->get_component<TransformComponent>()->ToString());
+        time_s = Clock::now();
+        frames = 0;
+    }
+
+    frames++;
 }
 
 void Game::Render()

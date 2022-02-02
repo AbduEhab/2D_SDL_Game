@@ -15,7 +15,7 @@ add_library(project_options INTERFACE)
 if(MSVC)
      target_compile_options(project_warnings INTERFACE /W4 /WX "/permissive-")
 else()
-     target_compile_features(project_options INTERFACE cxx_std_17)
+     target_compile_features(project_options INTERFACE cxx_std_20)
      target_include_directories(project_options INTERFACE include external)
 
      target_compile_options(project_warnings
@@ -68,6 +68,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # include(CTest)
 # enable_testing()
 
+
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
@@ -83,16 +85,21 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 # file(COPY ${CMAKE_CURRENT_BINARY_DIR}/src/${PROJECT_NAME}
 #      DESTINATION ${CMAKE_SOURCE_DIR}/bin/linux/)
 
+
+# add_subdirectory(
+#      external/freetype
+# )
+
+# add_subdirectory(
+#      external/sdl
+# )
+
 add_subdirectory(
-     external/sdl
+     external/sdl_image
 )
 
 add_subdirectory(
      external/sdl_mixer
-)
-
-add_subdirectory(
-     external/sdl_image
 )
 
 add_subdirectory(
@@ -113,12 +120,12 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_directories(${PROJECT_NAME}
-     PRIVATE external/external/sdl
+     # PRIVATE external/external/sdl
      PRIVATE external/external/sdl_mixer
      PRIVATE external/external/sdl_image
      PRIVATE external/external/sdl_ttf
      PRIVATE external/external/glm
 )
 
-target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm lua)
+target_link_libraries(${PROJECT_NAME} SDL2 SDL2_mixer SDL2_image SDL2_ttf glm)
 
