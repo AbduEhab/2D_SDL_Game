@@ -7,9 +7,6 @@
 [submodule "external/sdl_image"]
 	path = external/sdl_image
 	url = https://github.com/libsdl-org/SDL_image.git
-[submodule "external/sdl_ttf"]
-	path = external/sdl_ttf
-	url = https://github.com/libsdl-org/SDL_ttf.git
 [submodule "external/glm"]
 	path = external/glm
 	url = https://github.com/g-truc/glm.git
