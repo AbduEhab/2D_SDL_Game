@@ -45,13 +45,13 @@ public:
     }
 
     template <typename T>
-    [[NODISCARD]] constexpr T *get_component()
+    [[NODISCARD]] constexpr T *get_component() const
     {
         return static_cast<T *>(_components_by_types[&typeid(T)]);
     }
 
     template <typename T>
-    [[NODISCARD]] constexpr bool HasComponent()
+    [[NODISCARD]] constexpr bool HasComponent() const
     {
         return !(_components_by_types[&typeid(T)] == nullptr);
     }
