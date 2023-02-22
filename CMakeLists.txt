@@ -149,8 +149,19 @@ add_subdirectory(
 
 # file(GLOB_RECURSE SDL_INCLUDES CONFIGURE_DEPENDS /include/*.h)
 
+# set CMAKE_PREFIX_PATH to the directory containing SDL2Config.cmake
+set(SDL2_DIR external/sdl)
+
+# find the SDL2 libraries
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+
+# find_package(SDL2_mixer REQUIRED)
+
+
 target_include_directories(${PROJECT_NAME}
-     PUBLIC external/sdl/include
+     PUBLIC ${SDL2_INCLUDE_DIRS}
      PUBLIC external/sdl_mixer/include
      PUBLIC external/sdl_image
      PUBLIC external/sdl_ttf
@@ -166,9 +177,8 @@ target_link_directories(${PROJECT_NAME}
      PRIVATE external/glm
 )
 
-find_file(SDL2_INCLUDE_DIR NAME SDL.h HINTS SDL2)
-find_library(SDL2_LIBRARY NAME SDL2)
+# find_file(SDL2_INCLUDE_DIR NAME SDL.h HINTS SDL2)
+# find_library(SDL2_LIBRARY NAME SDL2)
 
-
-target_link_libraries(${PROJECT_NAME} SDL2 SDL2_image freetype SDL2_ttf glm )
+target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARIES} SDL2_image freetype SDL2_ttf glm )
 
