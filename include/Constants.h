@@ -17,7 +17,7 @@ constexpr float FPS = 60;
 constexpr inline float FRAME_TIME_TARGET = (1000.0f / FPS);
 
 using Clock = std::chrono::high_resolution_clock;
-using TimePoint = std::chrono::_V2::system_clock::time_point;
+using TimePoint = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
 #ifdef DEBUG
 #define Debug(x) x;

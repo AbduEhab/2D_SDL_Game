@@ -16,17 +16,17 @@ namespace Engine
 
     inline float get_ticks()
     {
-        return (Clock::now() - ticks_last_frame).count() * 1e-9;
+        return (Clock::now() - ticks_last_frame).count();
     }
 
     inline float get_ticks_milliseconds()
     {
-        return (Clock::now() - ticks_last_frame).count() * 1e-6;
+        return std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - ticks_last_frame).count();
     }
 
-    inline float get_ticks_nanosecond()
+    inline float get_ticks_microseconds()
     {
-        (Clock::now() - ticks_last_frame).count();
+        return std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - ticks_last_frame).count();
     }
 
     inline void calculate_deltatime_and_wait()

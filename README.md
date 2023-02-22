@@ -21,12 +21,12 @@ Make sure all dependencies are installed
 
 Debian:
 ```bash
-sudo apt install build-essential sdl2 sdl2-image sdl2-ttf sdl2-mixer
+sudo apt install build-essential sdl2 sdl2-image sdl2-ttf sdl2-mixer cmake g++
 ```
 
 Arch:
 ```bash
-sudo pacman -S build-essential sdl2 sdl2_image sdl2_mixer sdl2_ttf-git
+sudo pacman -S build-essential sdl2 sdl2_image sdl2_mixer sdl2_ttf-git cmake g++
 ```
 
 Download/update the submodules (cmake will get them automatically now)
@@ -39,12 +39,12 @@ If the submodules don't work for whatever reason, you can install these dependan
 
 Debian:
 ```bash
-sudo apt install build-essential libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev liblua5.3-dev glm
+sudo apt install build-essential libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev liblua5.3-dev glm cmake g++
 ```
 
 Arch:
 ```bash
-sudo pacman -S build-essential sdl2 sdl2_image sdl2_mixer sdl2_ttf-git lua glm
+sudo pacman -S build-essential sdl2 sdl2_image sdl2_mixer sdl2_ttf-git lua glm cmake g++
 ```
 
 Now run the following command to init cmake

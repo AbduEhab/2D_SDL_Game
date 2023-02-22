@@ -1,88 +1,127 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.13)
 
-project("SDL_GAME" VERSION 0.1.0)
+project(SDL_GAME VERSION 0.1.0 LANGUAGES CXX)
+enable_language(CXX)
 
-add_subdirectory(src)
+# ----------------------------------------------------------------------------------------------
+# Part till line 71 is taken from @lefticus
 
-# Part till line 42 is taken from @lefticus
+# set a default CXX standard used by the external tools like clang-tidy, cppcheck, etc.
+# You can later set fine-grained standards for each target using `target_compile_features`
+set(CMAKE_CXX_STANDARD 20)
 
-# Link this 'library' to use the standard warnings
-add_library(project_warnings INTERFACE)
+# ## Add project_options
+# include(FetchContent)
+# FetchContent_Declare(_project_options URL https://github.com/cpp-best-practices/project_options/archive/refs/heads/main.zip)
+# FetchContent_MakeAvailable(_project_options)
+# include(${_project_options_SOURCE_DIR}/Index.cmake)
+include(CMakeSetupFiles/Index.cmake)
 
-# Link this 'library' to set the c++ standard / compile-time options requested
-add_library(project_options INTERFACE)
+# run_vcpkg()
 
+# Initialize project_options
+# uncomment the options to enable them
 if(MSVC)
-     target_compile_options(project_warnings INTERFACE /W4 /WX "/permissive-")
+    project_options(
+
+        # ENABLE_CACHE
+        # ENABLE_CONAN
+        WARNINGS_AS_ERRORS
+        # ENABLE_CPPCHECK
+        # ENABLE_CLANG_TIDY
+        # ENABLE_INCLUDE_WHAT_YOU_USE
+        # ENABLE_COVERAGE
+        # ENABLE_PCH
+        # PCH_HEADERS <Eigen/Dense> <fmt/core.h> <vector> <utility> <string> <string_view>
+        # ENABLE_DOXYGEN
+        # ENABLE_IPO
+        # ENABLE_USER_LINKER
+        # ENABLE_BUILD_WITH_TIME_TRACE
+        # ENABLE_UNITY
+        # ENABLE_SANITIZER_ADDRESS
+        # ENABLE_SANITIZER_LEAK
+        # ENABLE_SANITIZER_UNDEFINED_BEHAVIOR
+        # ENABLE_SANITIZER_THREAD
+        # ENABLE_SANITIZER_MEMORY
+        CLANG_WARNINGS "-Weverything"
+    )
 else()
-     target_compile_features(project_options INTERFACE cxx_std_20)
-     target_include_directories(project_options INTERFACE include external)
+    project_options(
 
-     target_compile_options(project_warnings
-          INTERFACE -Wall
-                    -Werror # treat all warnings as errors
-                    -Wextra # reasonable and standard
-                    -Wshadow # warn the user if a variable declaration shadows one from a parent context
-                    -Wnon-virtual-dtor # warn the user if a class with virtual functions has a non-virtual destructor. This helps catch hard to track down memory errors
-                    -Wold-style-cast # warn for c-style casts
-                    -Wcast-align # warn for potential performance problem casts
-                    -Wunused # warn on anything being unused
-                    -Woverloaded-virtual # warn if you overload (not override) a virtual function
-                    -Wpedantic # warn if non-standard C++ is used
-                    -Wconversion # warn on type conversions that may lose data
-                    -Wsign-conversion # warn on sign conversions
-                    -Wnull-dereference # warn if a null dereference is detected
-                    -Wdouble-promotion # warn if float is implicit promoted to double
-                    -Wformat=2 # warn on security issues around functions that format output (ie printf)
-                    
-                    -Wattributes ## This part was not included by @lefticus
-                    -Wreturn-local-addr
-     )
+        # ENABLE_CACHE
+        # ENABLE_CONAN
+        WARNINGS_AS_ERRORS
+        # ENABLE_CPPCHECK
+        # ENABLE_CLANG_TIDY
+        # ENABLE_INCLUDE_WHAT_YOU_USE
+        # ENABLE_COVERAGE
+        # ENABLE_PCH
+        # PCH_HEADERS <Eigen/Dense> <fmt/core.h> <vector> <utility> <string> <string_view>
+        # ENABLE_DOXYGEN
+        # ENABLE_IPO
+        # ENABLE_USER_LINKER
+        # ENABLE_BUILD_WITH_TIME_TRACE
+        # ENABLE_UNITY
+        # ENABLE_SANITIZER_ADDRESS
+        # ENABLE_SANITIZER_LEAK
+        # ENABLE_SANITIZER_UNDEFINED_BEHAVIOR
+        # ENABLE_SANITIZER_THREAD
+        # ENABLE_SANITIZER_MEMORY
+    )
 endif()
-#----------------------------------------------------------------------------------------------
 
-# Part till line 62 is taken from @codetechandtutorials
+# ----------------------------------------------------------------------------------------------
 
-#           DOWNLOAD ALL THE SUBMODULES
+# ----------------------------------------------------------------------------------------------
+# Part till line 102 is very very similar to that of @codetechandtutorials
+
+# DOWNLOAD ALL THE SUBMODULES
 find_package(Git QUIET)
+
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
-# Update submodules as needed
+    # Update submodules as needed
     option(GIT_SUBMODULE "Check submodules during build" ON)
-    if(GIT_SUBMODULE)
+
+    if(NOT GIT_SUBMODULE) # Check submodules during build (SET TO 0 TO AVOID UPDATING)
         message(STATUS "Submodule update")
-        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
+
+        if(0)
+            execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        else()
+            execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive --remote --merge
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        endif()
+
         if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-            message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+            message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
         endif()
     endif()
 endif()
 
-#----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
+        "Build not specified, defaulted to RelWithDebInfo" FORCE)
+    message(STATUS "Build type not specified, defaulted to RelWithDebInfo")
+endif(NOT CMAKE_BUILD_TYPE)
 
+add_subdirectory(
+    src
+)
+
+# Extra C++ specific option I need
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-# set(TARGET ${PROJECT_NAME} CMAKE_CXX_STANDARD 17)
-# set(TARGET ${PROJECT_NAME} CMAKE_CXX_STANDARD_REQUIRED on)
 
-# include(CTest)
-# enable_testing()
-
-
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
      $<$<CONFIG:Debug>:DEBUG=1>
      $<$<CONFIG:RelWithDebInfo>:DEBUG=1>
      $<$<CONFIG:Release>:NDEBUG=1>
 )
-
-
-# file(COPY ${CMAKE_CURRENT_BINARY_DIR}/src/${PROJECT_NAME}
-#      DESTINATION ${CMAKE_SOURCE_DIR}/bin/linux/)
-
 
 add_subdirectory(
      external/freetype
@@ -100,13 +139,15 @@ add_subdirectory(
      external/sdl_mixer
 )
 
-add_subdirectory(
-     external/sdl_ttf
-)
+# add_subdirectory(
+#      external/sdl_ttf
+# )
 
 add_subdirectory(
      external/glm
 )
+
+# file(GLOB_RECURSE SDL_INCLUDES CONFIGURE_DEPENDS /include/*.h)
 
 target_include_directories(${PROJECT_NAME}
      PUBLIC external/sdl/include
@@ -118,12 +159,16 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_directories(${PROJECT_NAME}
-     PRIVATE external/external/sdl
-     PRIVATE external/external/sdl_mixer
-     PRIVATE external/external/sdl_image
-     PRIVATE external/external/sdl_ttf
-     PRIVATE external/external/glm
+     PRIVATE external/sdl
+     PRIVATE external/sdl_mixer
+     PRIVATE external/sdl_image
+     PRIVATE external/sdl_ttf
+     PRIVATE external/glm
 )
 
-target_link_libraries(${PROJECT_NAME} SDL2 SDL2_image freetype SDL2_ttf glm)
+find_file(SDL2_INCLUDE_DIR NAME SDL.h HINTS SDL2)
+find_library(SDL2_LIBRARY NAME SDL2)
+
+
+target_link_libraries(${PROJECT_NAME} SDL2 SDL2_image freetype SDL2_ttf glm )
 
