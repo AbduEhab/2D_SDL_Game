@@ -1,40 +1,84 @@
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required(VERSION 3.8)
 
+file(GLOB_RECURSE SRC_CXX_FILES CONFIGURE_DEPENDS *.cpp)
 add_executable(${PROJECT_NAME}
-    Main.cpp
-    Game.cpp
-    Entity.cpp
-    EntityManager.cpp
-    TextureManager.cpp
-    AssetManager.cpp
-
+    ${SRC_CXX_FILES}
 )
 
-if(NOT MSVC)
+if(UNIX AND NOT APPLE)
+    # Copy Binary to DEV specified location
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        ${CMAKE_SOURCE_DIR}/bin/linux
+    )
 
-# Copy Binary to DEV specified location
-add_custom_command(
-     TARGET ${PROJECT_NAME} POST_BUILD
-     COMMAND ${CMAKE_COMMAND} -E copy
-          ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
-          ${CMAKE_SOURCE_DIR}/bin/
-)
+    # Delete Cmake files
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E remove_directory
+        ${CMAKE_SOURCE_DIR}/bin/linux/CMakeFiles
+    )
 
-# Set a symbolic link so the binary can find a required relative folder
-set(link_src "${CMAKE_SOURCE_DIR}/assets")
-if(UNIX AND NOT APPLE) 
-    set(link_dst "${CMAKE_CURRENT_BINARY_DIR}/../assets") 
-else() 
-    set(link_dst "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/../assets") 
-endif() 
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E remove
+        ${CMAKE_SOURCE_DIR}/bin/linux/Makefile
+    )
 
-add_custom_command( 
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E create_symlink ${link_src} ${link_dst} 
-    DEPENDS ${link_dst} 
-    COMMENT "symbolic link ${link_src} => ${link_dst}" 
-)
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E remove
+        ${CMAKE_SOURCE_DIR}/bin/linux/cmake_install.cmake
+    )
 
+else()
+    # Copy Binary to DEV specified location
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM} # Change this to your Prefered location (I prefer ${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/ or ${CMAKE_SOURCE_DIR}/bin/$<CMAKE_GENERATOR_PLATFORM>/)
+    )
+
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM}
+    )
+
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    )
+
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_BINARY_DIR}/external/SDL/$<CONFIG>/SDL2.dll
+        ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM}/SDL2.dll)
+
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_BINARY_DIR}/external/SDL/$<CONFIG>/SDL2.dll
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/SDL2.dll)
+
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_BINARY_DIR}/external/sdl_image/$<CONFIG>/SDL2_image.dll
+        ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM}/SDL2_image.dll)
+
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_BINARY_DIR}/external/sdl_image/$<CONFIG>/SDL2_image.dll
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/SDL2_image.dll)
 endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

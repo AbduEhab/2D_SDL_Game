@@ -26,7 +26,7 @@ if(MSVC)
 
         # ENABLE_CACHE
         # ENABLE_CONAN
-        WARNINGS_AS_ERRORS
+        # WARNINGS_AS_ERRORS
         # ENABLE_CPPCHECK
         # ENABLE_CLANG_TIDY
         # ENABLE_INCLUDE_WHAT_YOU_USE
@@ -50,7 +50,7 @@ else()
 
         # ENABLE_CACHE
         # ENABLE_CONAN
-        WARNINGS_AS_ERRORS
+        # WARNINGS_AS_ERRORS
         # ENABLE_CPPCHECK
         # ENABLE_CLANG_TIDY
         # ENABLE_INCLUDE_WHAT_YOU_USE
@@ -108,77 +108,68 @@ if(NOT CMAKE_BUILD_TYPE)
     message(STATUS "Build type not specified, defaulted to RelWithDebInfo")
 endif(NOT CMAKE_BUILD_TYPE)
 
+# Add locations of other CMakelists.txt (one per call)
 add_subdirectory(
     src
 )
 
 # Extra C++ specific option I need
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(SDL2IMAGE_INSTALL OFF)
 
+# <-- Set standard here -->
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
+# <----------------------->
+
+# <-- Define Compile Time Definitions here: -->
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-     $<$<CONFIG:Debug>:DEBUG=1>
-     $<$<CONFIG:RelWithDebInfo>:DEBUG=1>
-     $<$<CONFIG:Release>:NDEBUG=1>
+    $<$<CONFIG:Debug>:DEBUG=1>
+    $<$<CONFIG:RelWithDebInfo>:DEBUG=1>
+    $<$<CONFIG:Release>:NDEBUG=1>
+    $<$<CONFIG:MinSizeRel>:NDEBUG=1>
 )
 
 add_subdirectory(
-     external/freetype
+    external/SDL
+)
+
+# add_custom_target(SDL2main DEPENDS SDL2)
+
+add_subdirectory(
+    external/glm
 )
 
 add_subdirectory(
-     external/sdl
+    external/sdl_image
 )
 
-add_subdirectory(
-     external/sdl_image
-)
+# <------------------------------------------->
 
-add_subdirectory(
-     external/sdl_mixer
-)
-
-# add_subdirectory(
-#      external/sdl_ttf
-# )
-
-add_subdirectory(
-     external/glm
-)
-
-# file(GLOB_RECURSE SDL_INCLUDES CONFIGURE_DEPENDS /include/*.h)
-
-# set CMAKE_PREFIX_PATH to the directory containing SDL2Config.cmake
-set(SDL2_DIR external/sdl)
-
-# find the SDL2 libraries
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-
-# find_package(SDL2_mixer REQUIRED)
-
-
+# <-- Add directories to include directory here: -->
 target_include_directories(${PROJECT_NAME}
-     PUBLIC ${SDL2_INCLUDE_DIRS}
-     PUBLIC external/sdl_mixer/include
-     PUBLIC external/sdl_image
-     PUBLIC external/sdl_ttf
-     PUBLIC external/glm
-     PUBLIC include/
+    PUBLIC src
+    PUBLIC include
+    PUBLIC external/SDL/include
+    PUBLIC external/glm
+    PUBLIC external/sdl_image
 )
 
+# <------------------------------------------------>
+
+# <-- Add directory of external libs to link here: -->
 target_link_directories(${PROJECT_NAME}
-     PRIVATE external/sdl
-     PRIVATE external/sdl_mixer
-     PRIVATE external/sdl_image
-     PRIVATE external/sdl_ttf
-     PRIVATE external/glm
+    PRIVATE src # this line is just to prevent errors
 )
 
-# find_file(SDL2_INCLUDE_DIR NAME SDL.h HINTS SDL2)
-# find_library(SDL2_LIBRARY NAME SDL2)
+# <-------------------------------------------------->
 
-target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARIES} SDL2_image freetype SDL2_ttf glm )
+# <-- Link needed Libs: -->
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE project_options project_warnings
+    PUBLIC SDL2
+    PUBLIC glm
+    PUBLIC SDL2_image
+)
 
+# <----------------------->

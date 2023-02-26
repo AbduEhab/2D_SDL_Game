@@ -1,9 +1,9 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-#include "./Game.h"
-#include "Components/SpriteComponent.h"
-#include "Components/TransformComponent.h"
+#include <Components/SpriteComponent.h>
+#include <Components/TransformComponent.h>
+#include <Game.h>
 
 EntityManager manager;
 AssetManager *Game::asset_manager = new AssetManager(&manager);
@@ -41,7 +41,7 @@ void Game::Initialize(int width, int height) // init SDL
 
 void Game::LoadLevel(int level_number) const
 {
-    asset_manager->AddTexture("tank-right", "../assets/images/tank-big-right.png");
+    asset_manager->AddTexture("tank-right", "images/tank-big-right.png");
 
     Entity &entity(manager.AddEntity("first dot"));
     entity.AddComponent<TransformComponent>(0, 10, 10, 10, 20, 20, 1);
@@ -66,21 +66,22 @@ void Game::ProcessInput()
 }
 
 static inline TimePoint time_s = Clock::now();
-static inline uint8_t frames = 0;
+static inline uint8_t frames = 1;
 
 void Game::Update(float delta_time)
 {
     manager.Update(delta_time);
 
-    bool res = (Clock::now() - time_s).count() * 1e-9 >= 1;
+    bool res = std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - time_s).count() >= FRAME_TIME_TARGET;
 
-    if (res) _unlikely
-    {
-        SDL_SetWindowTitle(_window, (std::to_string(frames).append(" | ").append(std::to_string(delta_time))).c_str());
-        DebugPrint(manager.get_entities()[0]->get_component<TransformComponent>()->ToString());
-        time_s = Clock::now();
-        frames = 0;
-    }
+    if (res)
+        _unlikely
+        {
+            SDL_SetWindowTitle(_window, (std::to_string(frames /*1000 / delta_time*/).append(" | ").append(std::to_string(delta_time))).c_str());
+            DebugPrint(manager.get_entities()[0]->get_component<TransformComponent>()->ToString());
+            time_s = Clock::now();
+            frames = 1;
+        }
 
     frames++;
 }

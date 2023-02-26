@@ -23,9 +23,7 @@ using TimePoint = std::chrono::time_point<std::chrono::high_resolution_clock>;
 #define Debug(x) x;
 #define DebugPrint(x) \
     std::cout << (x) << std::endl;
-#endif // DEBUG
-
-#ifdef NDEBUG
+#else
 #define Debug(x) ;
 #define DebugPrint(x) ;
 #endif // NDEBUG
