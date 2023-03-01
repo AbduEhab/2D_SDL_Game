@@ -2,41 +2,41 @@
 
 Entity::Entity(EntityManager &manager) : manager(manager)
 {
-    is_active = true;
+    active = true;
 }
 
 Entity::Entity(EntityManager &manager, std::string name) : manager(manager), name(name)
 {
-    is_active = true;
+    active = true;
 }
 
-void Entity::Update(float deltaTime)
+void Entity::update(float deltaTime)
 {
     for (auto &component : components)
     {
-        component->Update(deltaTime);
+        component->update(deltaTime);
     }
 }
 
-void Entity::Render() const
+void Entity::render() const
 {
     for (auto &component : components)
     {
-        component->Render();
+        component->render();
     }
 }
 
-void Entity::Destroy()
+void Entity::destroy()
 {
-    this->is_active = false;
+    active = false;
 }
 
-bool Entity::IsActive() const
+bool Entity::is_active() const
 {
-    return this->is_active;
+    return active;
 }
 
-void Entity::ListAllComponents(std::string indentation) const
+void Entity::list_all_components(std::string indentation) const
 {
     for (auto &component : components_by_types)
     {
@@ -44,7 +44,7 @@ void Entity::ListAllComponents(std::string indentation) const
     }
 }
 
-std::string Entity::ToString()
+std::string Entity::to_string()
 {
     std::string s;
 
@@ -52,7 +52,7 @@ std::string Entity::ToString()
 
     for (auto &component : components)
     {
-        s = s.append("\t") + component->ToString() + "\n";
+        s = s.append("\t") + component->to_string() + "\n";
     }
 
     return s + "}";

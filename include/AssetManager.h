@@ -7,13 +7,13 @@
 class AssetManager
 {
 private:
-    EntityManager *_manager;
-    std::map<std::string, SDL_Texture *> _textures;
+    EntityManager *manager;
+    std::map<std::string, SDL_Texture *> textures;
 
 public:
     AssetManager(EntityManager *manager);
     ~AssetManager();
-    void Clear();
-    void AddTexture(std::string texture_id, const char *asset_file);
+    void clear();
+    void add_texture(std::string texture_id, const char *asset_file);
     SDL_Texture *get_texture(std::string texture_id);
 };

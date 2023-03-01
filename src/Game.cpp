@@ -8,12 +8,12 @@ EntityManager manager;
 AssetManager *Game::asset_manager = new AssetManager(&manager);
 SDL_Renderer *Game::renderer;
 
-[[NODISCARD]] bool Game::IsRunning() const
+[[NODISCARD]] bool Game::is_running() const
 {
-    return is_running;
+    return running;
 }
 
-void Game::Initialize(int width, int height) // init SDL
+void Game::init(int width, int height) // init SDL
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -33,70 +33,77 @@ void Game::Initialize(int width, int height) // init SDL
         return;
     }
 
-    LoadLevel(0);
+    load_level(0);
 
-    is_running = true;
+    running = true;
 }
 
-void Game::LoadLevel([[maybe_unused]] int level_number) const
+void Game::load_level([[maybe_unused]] int level_number) const
 {
-    asset_manager->AddTexture("tank-right", "../assets/images/tank-big-right.png");
+    asset_manager->clear();
 
-    Entity &entity(manager.AddEntity("first dot"));
-    entity.AddComponent<TransformComponent>(0, 10, 10, 10, 20, 20, 1);
-    entity.AddComponent<SpriteComponent>("tank-right");
+    asset_manager->add_texture("tank-right", "../assets/images/tank-big-right.png");
+
+    switch (level_number)
+    {
+    case 0:
+        Entity &entity(manager.add_entity("first dot"));
+        entity.add_component<TransformComponent>(0, 10, 10, 10, 20, 20, 1);
+        entity.add_component<SpriteComponent>("tank-right");
+        break;
+    }
 }
 
-void Game::ProcessInput()
+void Game::process_input()
 {
     // create the SDL event object
     SDL_PollEvent(&event); // tell SDL to track the event
     switch (event.type)    // get event type and switch on it
     {
-    case SDL_QUIT:          // escape key on the window
-        is_running = false; // break game loop
+    case SDL_QUIT:       // escape key on the window
+        running = false; // break game loop
         break;
 
-    case SDL_KEYDOWN:                           // if any key is pressed down
-        if (event.key.keysym.sym = SDLK_ESCAPE) // if this key is the Esc key
-            is_running = false;
+    case SDL_KEYDOWN: // if any key is pressed down
+
+        event.key.keysym.sym = SDLK_ESCAPE;
+
+        if (event.key.keysym.sym) // if this key is the Esc key
+            running = false;
         break;
     }
 }
 
-static inline TimePoint time_s = Clock::now();
-static inline uint8_t frames = 1;
+TimePoint time_s = Clock::now();
 
-void Game::Update(float delta_time)
+void Game::update(float delta_time)
 {
-    manager.Update(delta_time);
+    manager.update(delta_time);
 
     bool res = std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - time_s).count() >= FRAME_TIME_TARGET;
 
     if (res) [[unlikely]]
     {
-        SDL_SetWindowTitle(window, (std::to_string(frames /*1000 / delta_time*/).append(" | ").append(std::to_string(delta_time))).c_str());
-        debug_print("Game Update: ", manager.get_entities()[0]->get_component<TransformComponent>()->ToString());
+        SDL_SetWindowTitle(window, (std::to_string(1 / delta_time).append(" | ").append(std::to_string(delta_time))).append(" | ").append(std::to_string(SDL_GetTicks64())).c_str());
+        debug_print("Game Update: ", manager.get_entities()[0]->get_component<TransformComponent>()->to_string());
         time_s = Clock::now();
-        frames = 1;
     }
-
-    frames++;
 }
 
-void Game::Render()
+void Game::render()
 {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255); // set up the given renderer to render a specific color
     SDL_RenderClear(renderer);                         // clear back buffer with the specified color
 
-    manager.Render();
+    manager.render();
 
     SDL_RenderPresent(renderer); // swap back and front buffer
 }
 
 //  cleaning after myself
-void Game::Destroy()
+void Game::destroy()
 {
+    asset_manager->clear();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

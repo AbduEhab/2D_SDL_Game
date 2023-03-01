@@ -11,13 +11,15 @@ namespace Engine
     // template <typename T>
     // using Scope = std::unique_ptr<T>;
 
+    #define ticks_since_epoch() std::chrono::high_resolution_clock::now().time_since_epoch()
+
     inline static float delta_time;
 
     inline static TimePoint ticks_last_frame;
 
     inline float get_ticks()
     {
-        return (Clock::now() - ticks_last_frame).count();
+        return (float)(Clock::now() - ticks_last_frame).count();
     }
 
     inline float get_ticks_milliseconds()

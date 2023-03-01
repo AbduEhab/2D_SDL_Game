@@ -1,6 +1,6 @@
 #include "TextureManager.h"
 
-SDL_Texture *TextureManager::LoadTexture(const char *textureFile)
+SDL_Texture *TextureManager::load_texture(const char *textureFile)
 {
     SDL_Surface *surface = IMG_Load(textureFile);
     if (!surface)
@@ -12,7 +12,7 @@ SDL_Texture *TextureManager::LoadTexture(const char *textureFile)
     return texture;
 }
 
-void TextureManager::Draw(SDL_Texture *texture, SDL_Rect sourceRect, SDL_Rect destinationRect, SDL_RendererFlip flip)
+void TextureManager::draw(SDL_Texture *texture, SDL_Rect sourceRect, SDL_Rect destinationRect, SDL_RendererFlip flip)
 {
     SDL_RenderCopyEx(Game::renderer, texture, &sourceRect, &destinationRect, 0, 0, flip);
 }

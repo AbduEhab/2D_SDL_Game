@@ -11,12 +11,12 @@ private:
     std::vector<Entity *> entities;
 
 public:
-    void Update(float delta_time);
-    void Render() const;
-    [[NODISCARD]] size_t Size() const;
-    [[NODISCARD]] bool IsEmpty() const;
-    [[NODISCARD]] Entity &AddEntity(std::string entity_name);
+    void update(float delta_time);
+    void render() const;
+    [[NODISCARD]] size_t size() const;
+    [[NODISCARD]] bool is_empty() const;
+    [[NODISCARD]] Entity &add_entity(std::string entity_name);
     [[NODISCARD]] std::vector<Entity *> get_entities() const;
-    void ListAllEntities() const;
-    bool Clear();
+    void list_all_entities() const;
+    bool clear();
 };
