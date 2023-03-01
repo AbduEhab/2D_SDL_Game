@@ -16,6 +16,3 @@
 [submodule "external/SDL"]
 	path = external/SDL
 	url = https://github.com/libsdl-org/SDL.git
-[submodule "cmake/sdl2"]
-	path = cmake/sdl2
-	url = https://gitlab.com/aminosbh/sdl2-cmake-modules.git

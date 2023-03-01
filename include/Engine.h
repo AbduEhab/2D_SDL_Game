@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Constants.h"
+#include "Constants.hpp"
 #include "SDL.h"
 
 namespace Engine
@@ -40,7 +40,7 @@ namespace Engine
         float waitTime = FRAME_TIME_TARGET - (Engine::get_ticks_milliseconds()); // calculate time to wait between frames
 
         if (waitTime > 0 && waitTime <= FRAME_TIME_TARGET)
-            _unlikely
+            [[unlikely]]
             {
                 SDL_Delay(waitTime);
                 // std::this_thread::sleep_for(std::chrono::milliseconds((int)waitTime)); // hold exec until the specified ms has passed

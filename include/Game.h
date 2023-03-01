@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Constants.h"
+#include "Constants.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -16,9 +16,9 @@ class AssetManager;
 class Game
 {
 private:
-    bool _is_running = false;
-    SDL_Window *_window; // the sdl frame
-    SDL_Event _event;
+    bool is_running = false;
+    SDL_Window *window; // the sdl frame
+    SDL_Event event;
 
 public:
     Game() = default;

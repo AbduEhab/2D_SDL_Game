@@ -8,7 +8,7 @@ class Entity;
 class EntityManager
 {
 private:
-    std::vector<Entity *> _entities;
+    std::vector<Entity *> entities;
 
 public:
     void Update(float delta_time);

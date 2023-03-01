@@ -2,7 +2,7 @@
 
 void EntityManager::Render() const
 {
-    for (auto &entity : _entities)
+    for (auto &entity : entities)
     {
         entity->Render();
     }
@@ -10,7 +10,7 @@ void EntityManager::Render() const
 
 void EntityManager::Update(float delta_time)
 {
-    for (auto &entity : _entities)
+    for (auto &entity : entities)
     {
         entity->Update(delta_time);
     }
@@ -18,7 +18,7 @@ void EntityManager::Update(float delta_time)
 
 bool EntityManager::Clear()
 {
-    for (auto &entity : _entities)
+    for (auto &entity : entities)
     {
         entity->Destroy();
     }
@@ -28,26 +28,26 @@ bool EntityManager::Clear()
 
 size_t EntityManager::Size() const
 {
-    return _entities.size();
+    return entities.size();
 }
 
 Entity &EntityManager::AddEntity(std::string entity_name)
 {
     Entity *entity = new Entity(*this, entity_name);
 
-    _entities.emplace_back(entity);
+    entities.emplace_back(entity);
 
     return *entity;
 }
 
 bool EntityManager::IsEmpty() const
 {
-    return _entities.size() == 0;
+    return entities.size() == 0;
 }
 
 std::vector<Entity *> EntityManager::get_entities() const
 {
-    return _entities;
+    return entities;
 }
 
 void EntityManager::ListAllEntities() const
@@ -55,9 +55,9 @@ void EntityManager::ListAllEntities() const
 
     std::cout << "EntityManager<EntityDump>:\n{" << std::endl;
 
-    for (auto entity : _entities)
+    for (auto entity : entities)
     {
-        std::cout << "\t" << entity->name_ << "\n\t{" << std::endl;
+        std::cout << "\t" << entity->name << "\n\t{" << std::endl;
         entity->ListAllComponents("\t\t");
 
         std::cout << "\t}" << std::endl;
