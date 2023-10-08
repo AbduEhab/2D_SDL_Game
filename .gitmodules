@@ -1,18 +1,12 @@
-[submodule "external/sdl_mixer"]
-	path = external/sdl_mixer
-	url = https://github.com/libsdl-org/SDL_mixer.git
-[submodule "external/sdl_image"]
-	path = external/sdl_image
-	url = https://github.com/libsdl-org/SDL_image.git
-[submodule "external/glm"]
-	path = external/glm
-	url = https://github.com/g-truc/glm.git
-[submodule "external/lua"]
-	path = external/lua
-	url = https://github.com/lua/lua.git
-[submodule "external/freetype"]
-	path = external/freetype
-	url = https://gitlab.freedesktop.org/freetype/freetype.git
 [submodule "external/SDL"]
 	path = external/SDL
 	url = https://github.com/libsdl-org/SDL.git
+[submodule "external/SDL_image"]
+	path = external/SDL_image
+	url = https://github.com/libsdl-org/SDL_image.git
+[submodule "external/SDL_ttf"]
+	path = external/SDL_ttf
+	url = https://github.com/libsdl-org/SDL_ttf.git
+[submodule "external/glm"]
+	path = external/glm
+	url = https://github.com/g-truc/glm.git

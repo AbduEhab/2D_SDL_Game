@@ -15,7 +15,7 @@
 
 > sdl's 'SDL_GetTicks()' has been very ify, it throws numbers in the millions every now and then which screws with the DeltaTime. I've implemented a temporary fix with the 'chrono' clock.
 
-> Note that sdl2 has also been refusing to compile for me for a couple of days now due to a problem with Wayland. I've resorted to using the system SDL lib instead of my compiled one. 
+> Note that sdl2 has also been refusing to compile for me for a couple of days now due to a problem with Wayland. I've resorted to using the system SDL lib instead of a compiled submodule. 
 
 Make sure all dependencies are installed
 
@@ -29,7 +29,7 @@ Arch:
 sudo pacman -S build-essential sdl2 sdl2_image sdl2_mixer sdl2_ttf-git cmake g++
 ```
 
-Download/update the submodules (cmake will get them automatically now)
+Download/update the submodules (cmake should, but might not do it automatically)
 ```bash
 git submodule sync
 git submodule update --init --recursive
