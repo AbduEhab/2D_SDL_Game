@@ -1,79 +1,10 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.16)
 
 project(SDL_GAME VERSION 0.1.0 LANGUAGES CXX)
 enable_language(CXX)
 
 # ----------------------------------------------------------------------------------------------
-# Part till line 71 is taken from @lefticus
-
-# set a default CXX standard used by the external tools like clang-tidy, cppcheck, etc.
-# You can later set fine-grained standards for each target using `target_compile_features`
-set(CMAKE_CXX_STANDARD 20)
-
-# ## Add project_options
-# include(FetchContent)
-# FetchContent_Declare(_project_options URL https://github.com/cpp-best-practices/project_options/archive/refs/heads/main.zip)
-# FetchContent_MakeAvailable(_project_options)
-# include(${_project_options_SOURCE_DIR}/Index.cmake)
-include(CMakeSetupFiles/Index.cmake)
-
-# run_vcpkg()
-
-# Initialize project_options
-# uncomment the options to enable them
-if(MSVC)
-    project_options(
-
-        # ENABLE_CACHE
-        # ENABLE_CONAN
-        # WARNINGS_AS_ERRORS
-        # ENABLE_CPPCHECK
-        # ENABLE_CLANG_TIDY
-        # ENABLE_INCLUDE_WHAT_YOU_USE
-        # ENABLE_COVERAGE
-        # ENABLE_PCH
-        # PCH_HEADERS <Eigen/Dense> <fmt/core.h> <vector> <utility> <string> <string_view>
-        # ENABLE_DOXYGEN
-        # ENABLE_IPO
-        # ENABLE_USER_LINKER
-        # ENABLE_BUILD_WITH_TIME_TRACE
-        # ENABLE_UNITY
-        # ENABLE_SANITIZER_ADDRESS
-        # ENABLE_SANITIZER_LEAK
-        # ENABLE_SANITIZER_UNDEFINED_BEHAVIOR
-        # ENABLE_SANITIZER_THREAD
-        # ENABLE_SANITIZER_MEMORY
-        CLANG_WARNINGS "-Weverything"
-    )
-else()
-    project_options(
-
-        # ENABLE_CACHE
-        # ENABLE_CONAN
-        # WARNINGS_AS_ERRORS
-        # ENABLE_CPPCHECK
-        # ENABLE_CLANG_TIDY
-        # ENABLE_INCLUDE_WHAT_YOU_USE
-        # ENABLE_COVERAGE
-        # ENABLE_PCH
-        # PCH_HEADERS <Eigen/Dense> <fmt/core.h> <vector> <utility> <string> <string_view>
-        # ENABLE_DOXYGEN
-        # ENABLE_IPO
-        # ENABLE_USER_LINKER
-        # ENABLE_BUILD_WITH_TIME_TRACE
-        # ENABLE_UNITY
-        # ENABLE_SANITIZER_ADDRESS
-        # ENABLE_SANITIZER_LEAK
-        # ENABLE_SANITIZER_UNDEFINED_BEHAVIOR
-        # ENABLE_SANITIZER_THREAD
-        # ENABLE_SANITIZER_MEMORY
-    )
-endif()
-
-# ----------------------------------------------------------------------------------------------
-
-# ----------------------------------------------------------------------------------------------
-# Part till line 102 is very very similar to that of @codetechandtutorials
+# Part till line 29 is very very similar to that of @codetechandtutorials
 
 # DOWNLOAD ALL THE SUBMODULES
 find_package(Git QUIET)
@@ -82,10 +13,10 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
     # Update submodules as needed
     option(GIT_SUBMODULE "Check submodules during build" ON)
 
-    if(NOT GIT_SUBMODULE) # Check submodules during build (SET TO 0 TO AVOID UPDATING)
+    if(GIT_SUBMODULE) # Check submodules during build (SET TO 0 TO AVOID UPDATING)
         message(STATUS "Submodule update")
 
-        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive -f
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
             RESULT_VARIABLE GIT_SUBMOD_RESULT)
 
@@ -136,12 +67,8 @@ if(USE_SDL2)
     if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL)
         # Clone the submodule
         execute_process(
-            COMMAND git submodule add https://github.com/libsdl-org/SDL.git external/SDL
+            COMMAND git submodule add -b SDL2 -f https://github.com/libsdl-org/SDL.git external/SDL
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        )
-        execute_process(
-            COMMAND git checkout release-2.26.x
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL/
         )
     endif()
 
@@ -160,12 +87,8 @@ endif()
 if(USE_SDL_IMAGE)
     if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_image)
         execute_process(
-            COMMAND git submodule add https://github.com/libsdl-org/SDL_image.git external/SDL_image
+            COMMAND git submodule add -b SDL2 -f https://github.com/libsdl-org/SDL_image.git external/SDL_image
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        )
-        execute_process(
-            COMMAND git checkout release-2.6.x
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_image/
         )
     endif()
 
@@ -181,12 +104,8 @@ endif()
 if(USE_SDL_MIXER)
     if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_mixer)
         execute_process(
-            COMMAND git submodule add https://github.com/libsdl-org/SDL_mixer.git external/SDL_mixer
+            COMMAND git submodule add -b SDL2 -f https://github.com/libsdl-org/SDL_mixer.git external/SDL_mixer
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        )
-        execute_process(
-            COMMAND git checkout release-2.6.x
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_mixer/
         )
     endif()
 
@@ -207,12 +126,8 @@ endif()
 if(USE_SDL_TTF)
     if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_ttf)
         execute_process(
-            COMMAND git submodule add https://github.com/libsdl-org/SDL_ttf.git external/SDL_ttf
+            COMMAND git submodule add -b SDL2 -f https://github.com/libsdl-org/SDL_ttf.git external/SDL_ttf
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        )
-        execute_process(
-            COMMAND git checkout release-2.20.x
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_ttf/
         )
         execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/external/
@@ -235,12 +150,8 @@ endif()
 if(USE_SDL_NET)
     if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_net)
         execute_process(
-            COMMAND git submodule add https://github.com/libsdl-org/SDL_net.git external/SDL_net
+            COMMAND git submodule add -b SDL2 -f https://github.com/libsdl-org/SDL_net.git external/SDL_net
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        )
-        execute_process(
-            COMMAND git checkout release-2.2.x
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_net/
         )
     endif()
 
@@ -260,19 +171,12 @@ endif()
 target_include_directories(${PROJECT_NAME}
     PUBLIC src
     PUBLIC include
-    PUBLIC external/SDL/include
-    PUBLIC external/glm
-    PUBLIC external/sdl_image
 )
 
 if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/glm)
         execute_process(
-            COMMAND git submodule add https://github.com/g-truc/glm.git external/glm
+            COMMAND git submodule add -f https://github.com/g-truc/glm.git external/glm
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        )
-        execute_process(
-            COMMAND git checkout 0.9.9.8
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/external/glm/
         )
     endif()
 
@@ -291,7 +195,7 @@ target_link_directories(${PROJECT_NAME}
 
 # <-- Link needed Libs: -->
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE project_options project_warnings
+    # PRIVATE project_options project_warnings
     PUBLIC glm
 
     # PUBLIC eigen3

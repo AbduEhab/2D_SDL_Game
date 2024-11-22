@@ -15,12 +15,26 @@ add_executable(${PROJECT_NAME}
     ${INC_C_FILES}
 )
 
+if(CMAKE_GENERATOR_PLATFORM STREQUAL "")
+    if(UNIX AND NOT APPLE)
+        set(CMAKE_GENERATOR_PLATFORM "linux")
+    elseif(WIN32)
+        set(CMAKE_GENERATOR_PLATFORM "windows")
+    elseif(APPLE)
+        set(CMAKE_GENERATOR_PLATFORM "macos")
+    endif()
+
+    message(WARNING "CMAKE_GENERATOR_PLATFORM is not set. 
+                    Tried to guess the platform based on the generator.
+                    It was set to ${CMAKE_GENERATOR_PLATFORM}")
+endif(CMAKE_GENERATOR_PLATFORM STREQUAL "")
+
 # Copy Binary to DEV specified location
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
-    ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM} # Change this to your Prefered location (I prefer ${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/ or ${CMAKE_SOURCE_DIR}/bin/$<CMAKE_GENERATOR_PLATFORM>/)
+    ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM}/ # Change this to your Prefered location (I prefer ${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/ or ${CMAKE_SOURCE_DIR}/bin/$<CMAKE_GENERATOR_PLATFORM>/)
 )
 
 add_custom_command(
