@@ -13,7 +13,7 @@
 class Component;
 class EntityManager;
 
-class [[NODISCARD]] Entity
+class [[nodiscard]] Entity
 {
 private:
     EntityManager &manager;
@@ -26,7 +26,7 @@ public:
     Entity(EntityManager &manager);
     Entity(EntityManager &manager, std::string name);
     void list_all_components(std::string indentation = "") const;
-    [[NODISCARD]] bool is_active() const;
+    [[nodiscard]] bool is_active() const;
     void update(float delta_time);
     void render() const;
     void destroy();
@@ -34,7 +34,7 @@ public:
     std::string to_string();
 
     template <typename T, typename... TArgs>
-    [[NODISCARD]] constexpr T &add_component(TArgs &&...args)
+    [[nodiscard]] constexpr T &add_component(TArgs &&...args)
     {
         T *comp(new T(std::forward<TArgs>(args)...));
         comp->owner = this;
@@ -45,13 +45,13 @@ public:
     }
 
     template <typename T>
-    [[NODISCARD]] constexpr T *get_component()
+    [[nodiscard]] constexpr T *get_component()
     {
         return static_cast<T *>(components_by_types[&typeid(T)]);
     }
 
     template <typename T>
-    [[NODISCARD]] constexpr bool has_component()
+    [[nodiscard]] constexpr bool has_component()
     {
         return !(components_by_types[&typeid(T)] == nullptr);
     }

@@ -4,6 +4,7 @@
 #include <array>
 #include <assert.h>
 #include <chrono>
+#include <cstdio>
 #include <deque>
 #include <filesystem>
 #include <fstream>
@@ -28,13 +29,7 @@
 #include <utility>
 #include <vector>
 
-// Set value to 1 to use the Profiling system
-#define PROFILING 1
-
-#include "Profiling/Instrumentor.hpp"
-#include "Profiling/Timer.hpp"
-
-constexpr float FPS = 60;
+constexpr float FPS = -1;
 constexpr inline float FRAME_TIME_TARGET = (1000.0f / FPS);
 
 using Clock = std::chrono::high_resolution_clock;
@@ -79,12 +74,12 @@ inline const std::string BINARY_DIRECTORY = std::filesystem::current_path().stri
  * @param max The maximum value of the random number
  */
 template <typename T>
-inline T random(T min = 0.0, T max = 1.0)
+[[nodiscard]] inline auto random(T min = 0.0, T max = 1.0) -> T
 {
     thread_local std::random_device rd;
     thread_local std::mt19937 gen(rd());
     thread_local std::uniform_real_distribution<> dis(min, max);
-    return (T)dis(gen);
+    return static_cast<T>(dis(gen));
 }
 
 /**
@@ -99,9 +94,9 @@ inline T random(T min = 0.0, T max = 1.0)
  * @return constexpr T
  */
 template <typename T>
-inline constexpr T map_to_range(T value, T min, T max, T new_min, T new_max)
+[[nodiscard]] inline auto constexpr map_to_range(T value, T min, T max, T new_min, T new_max) -> T
 {
-    return (T)(((value - min) / (max - min)) * (new_max - new_min) + new_min);
+    return static_cast<T>(((value - min) / (max - min)) * (new_max - new_min) + new_min);
 }
 
 /**
@@ -113,14 +108,14 @@ inline constexpr T map_to_range(T value, T min, T max, T new_min, T new_max)
  * @param rest
  */
 template <typename First, typename... Strings>
-void print_by_force(First arg, [[maybe_unused]] const Strings &...rest)
+inline auto print(First arg, [[maybe_unused]] const Strings &...rest_of_args) -> void
 {
-    std::cout << arg;
-    if constexpr (sizeof...(rest) > 0) [[likely]]
-    {
-        print_by_force(rest...);
-        return;
-    }
+
+    std::ostringstream os;
+    os << arg;
+    ((os << rest_of_args), ...);
+
+    std::puts(os.str().c_str());
 }
 
 /**
@@ -132,24 +127,22 @@ void print_by_force(First arg, [[maybe_unused]] const Strings &...rest)
  * @param rest
  */
 template <typename First, typename... Strings>
-void async_print_by_force(const First arg, const Strings &...rest)
+inline auto async_print(const First arg, const Strings &...rest) -> void
 {
     std::thread t([&]()
-                  { print_by_force(arg, rest...); std::cout << std::endl; });
+                  { print(arg, rest...); std::cout << std::endl; });
     t.detach();
 }
 
 #ifdef DEBUG
 
-#define debug_print(x) print_by_force(x, "");
-#define debug_print(x, y) \
-    print_by_force(x, y); \
-    std::cout << std::endl;
-#define debug_async_print(x, y) async_print_by_force(x, y);
+#define debug_print(x, ...) print(x, ##__VA_ARGS__);
+#define debug_async_print(x, ...) async_print(x, ##__VA_ARGS__);
+
 #else
-#define debug_print(x)
-#define debug_print(x, y)
-#define debug_async_print(x, y)
+
+#define debug_print(x, ...) ;
+#define debug_async_print(x, ...) ;
 
 #endif
 
@@ -161,7 +154,13 @@ void async_print_by_force(const First arg, const Strings &...rest)
  * @param T
  */
 template <typename Base, typename T>
-inline constexpr int instanceof (const T *)
+inline auto constexpr instanceof(const T *) -> int
 {
     return std::is_base_of<Base, T>::value;
 }
+
+// Set value to 1 to use the Profiling system
+#define PROFILING 1
+
+#include "Profiling/Instrumentor.hpp"
+#include "Profiling/Timer.hpp"

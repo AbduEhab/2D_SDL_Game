@@ -17,7 +17,7 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
         message(STATUS "Submodule update")
 
         execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive -f
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
             RESULT_VARIABLE GIT_SUBMOD_RESULT)
 
         if(NOT GIT_SUBMOD_RESULT EQUAL "0")
@@ -64,48 +64,91 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 # <------------------------------------------->
 if(USE_SDL2)
     # if folder not avalable
-    if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL)
+    if(NOT EXISTS ${PROJECT_SOURCE_DIR}/external/SDL)
         # Clone the submodule
         execute_process(
             COMMAND git submodule add -b SDL2 -f https://github.com/libsdl-org/SDL.git external/SDL
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         )
     endif()
 
     # Add the submodule directory to the include path
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/include)
+    include_directories(${PROJECT_SOURCE_DIR}/external)
 
     # Add the submodule library to the project
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/SDL)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/external/SDL)
 
     # Link the submodule library to the main project
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
+
+    # get ImGui
+    if(NOT EXISTS ${PROJECT_SOURCE_DIR}external/imgui)
+        execute_process(
+            COMMAND git submodule add -f https://github.com/ocornut/imgui.git external/imgui
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        )
+    endif()
+
+    add_library(ImGui STATIC
+        ${PROJECT_SOURCE_DIR}/external/imgui/imgui.h
+        ${PROJECT_SOURCE_DIR}/external/imgui/imconfig.h
+        ${PROJECT_SOURCE_DIR}/external/imgui/imgui_internal.h
+        ${PROJECT_SOURCE_DIR}/external/imgui/imstb_rectpack.h
+        ${PROJECT_SOURCE_DIR}/external/imgui/imstb_textedit.h
+        ${PROJECT_SOURCE_DIR}/external/imgui/imstb_truetype.h
+        ${PROJECT_SOURCE_DIR}/external/imgui/imgui.cpp
+        ${PROJECT_SOURCE_DIR}/external/imgui/imgui_draw.cpp
+        ${PROJECT_SOURCE_DIR}/external/imgui/imgui_widgets.cpp
+        ${PROJECT_SOURCE_DIR}/external/imgui/imgui_tables.cpp
+        ${PROJECT_SOURCE_DIR}/external/imgui/imgui_demo.cpp
+        ${PROJECT_SOURCE_DIR}/external/imgui/backends/imgui_impl_sdl2.h
+        ${PROJECT_SOURCE_DIR}/external/imgui/backends/imgui_impl_sdlrenderer2.h
+        ${PROJECT_SOURCE_DIR}/external/imgui/backends/imgui_impl_sdl2.cpp
+        ${PROJECT_SOURCE_DIR}/external/imgui/backends/imgui_impl_sdlrenderer2.cpp
+    )
+
+    target_include_directories(ImGui
+        PRIVATE ${PROJECT_SOURCE_DIR}/external/imgui
+        PRIVATE ${PROJECT_SOURCE_DIR}/external/SDL
+    )
+
+    target_link_libraries(ImGui
+        PRIVATE SDL2
+    )
+
+    # Link the ImGui library to the main project
+    target_link_libraries(${PROJECT_NAME} PRIVATE ImGui)
+
+    # Add the ImGui include directory to the project
+    target_include_directories(${PROJECT_NAME}
+        PRIVATE ${PROJECT_SOURCE_DIR}/external/imgui)
+
 else()
     message(STATUS "SDL3 is not supported yet but is coming soon (TM).")
 endif()
 
 if(USE_SDL_IMAGE)
-    if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_image)
+    if(NOT EXISTS ${PROJECT_SOURCE_DIR}/external/SDL_image)
         execute_process(
             COMMAND git submodule add -b SDL2 -f https://github.com/libsdl-org/SDL_image.git external/SDL_image
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         )
     endif()
 
     set(SDL2IMAGE_INSTALL OFF)
 
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_image)
+    include_directories(${PROJECT_SOURCE_DIR}/external/SDL_image)
 
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_image)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/external/SDL_image)
 
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_image)
 endif()
 
 if(USE_SDL_MIXER)
-    if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_mixer)
+    if(NOT EXISTS ${PROJECT_SOURCE_DIR}/external/SDL_mixer)
         execute_process(
             COMMAND git submodule add -b SDL2 -f https://github.com/libsdl-org/SDL_mixer.git external/SDL_mixer
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         )
     endif()
 
@@ -114,54 +157,53 @@ if(USE_SDL_MIXER)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,--exclude-libs,SDL2_mixer.lib")
 
     # Add the submodule directory to the include path
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_mixer/include)
+    include_directories(${PROJECT_SOURCE_DIR}/external/SDL_mixer/include)
 
     # Add the submodule library to the project
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_mixer)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/external/SDL_mixer)
 
     # Link the submodule library to the main project
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_mixer)
 endif()
 
 if(USE_SDL_TTF)
-    if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_ttf)
+    if(NOT EXISTS ${PROJECT_SOURCE_DIR}/external/SDL_ttf)
         execute_process(
             COMMAND git submodule add -b SDL2 -f https://github.com/libsdl-org/SDL_ttf.git external/SDL_ttf
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         )
         execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/external/
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/external/
             RESULT_VARIABLE GIT_SUBMOD_RESULT)
     endif()
-
 
     set(SDL2TTF_INSTALL OFF)
 
     # Add the submodule directory to the include path
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_ttf)
+    include_directories(${PROJECT_SOURCE_DIR}/external/SDL_ttf)
 
     # Add the submodule library to the project
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_ttf)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/external/SDL_ttf)
 
     # Link the submodule library to the main project
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_ttf)
 endif()
 
 if(USE_SDL_NET)
-    if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_net)
+    if(NOT EXISTS ${PROJECT_SOURCE_DIR}/external/SDL_net)
         execute_process(
             COMMAND git submodule add -b SDL2 -f https://github.com/libsdl-org/SDL_net.git external/SDL_net
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         )
     endif()
 
     set(SDL2NET_INSTALL OFF)
 
     # Add the submodule directory to the include path
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_net)
+    include_directories(${PROJECT_SOURCE_DIR}/external/SDL_net)
 
     # Add the submodule library to the project
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_net)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/external/SDL_net)
 
     # Link the submodule library to the main project
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_net)
@@ -173,12 +215,12 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC include
 )
 
-if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/glm)
-        execute_process(
-            COMMAND git submodule add -f https://github.com/g-truc/glm.git external/glm
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        )
-    endif()
+if(NOT EXISTS ${PROJECT_SOURCE_DIR}/external/glm)
+    execute_process(
+        COMMAND git submodule add -f https://github.com/g-truc/glm.git external/glm
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    )
+endif()
 
 add_subdirectory(
     external/glm
@@ -195,10 +237,7 @@ target_link_directories(${PROJECT_NAME}
 
 # <-- Link needed Libs: -->
 target_link_libraries(${PROJECT_NAME}
-    # PRIVATE project_options project_warnings
     PUBLIC glm
-
-    # PUBLIC eigen3
 )
 
 # <----------------------->

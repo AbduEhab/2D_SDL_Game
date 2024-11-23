@@ -2,8 +2,13 @@
 
 #include "Constants.hpp"
 
+#include <imgui.h>
+#include <backends/imgui_impl_sdl2.h>
+#include <backends/imgui_impl_sdlrenderer2.h>
+
 #include <SDL.h>
 #include <SDL_image.h>
+
 // #include <SDL_ttf.h>
 
 #include "AssetManager.h"
@@ -25,7 +30,7 @@ public:
 
     static AssetManager *asset_manager;
     
-    [[NODISCARD]] bool is_running() const;
+    [[nodiscard]] bool is_running() const;
     static SDL_Renderer *renderer; // the sdl graphics renderer
     void load_level(int level_number) const;
     void init(int width, int height);

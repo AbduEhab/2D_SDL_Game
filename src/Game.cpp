@@ -8,7 +8,7 @@ EntityManager manager;
 AssetManager *Game::asset_manager = new AssetManager(&manager);
 SDL_Renderer *Game::renderer;
 
-[[NODISCARD]] bool Game::is_running() const
+[[nodiscard]] bool Game::is_running() const
 {
     return running;
 }
@@ -33,6 +33,15 @@ void Game::init(int width, int height) // init SDL
         return;
     }
 
+    // init imgui
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    (void)io;
+    // ImGui::StyleColorsDark();
+    ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
+    ImGui_ImplSDLRenderer2_Init(renderer);
+
     load_level(0);
 
     running = true;
@@ -48,8 +57,8 @@ void Game::load_level([[maybe_unused]] int level_number) const
     {
     case 0:
         Entity &entity(manager.add_entity("first dot"));
-        entity.add_component<TransformComponent>(0, 10, 10, 10, 20, 20, 1);
-        entity.add_component<SpriteComponent>("tank-right");
+        (void)entity.add_component<TransformComponent>(0, 10, 10, 10, 20, 20, 1);
+        (void)entity.add_component<SpriteComponent>("tank-right");
         break;
     }
 }
@@ -72,6 +81,8 @@ void Game::process_input()
             running = false;
         break;
     }
+
+    ImGui_ImplSDL2_ProcessEvent(&event);
 }
 
 TimePoint time_s = Clock::now();
@@ -92,10 +103,21 @@ void Game::update(float delta_time)
 
 void Game::render()
 {
+    ImGui_ImplSDLRenderer2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+    ImGui::Begin("test");
+    ImGui::Text("Hello, world!");
+    ImGui::End();
+
+    ImGui::Render();
+
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255); // set up the given renderer to render a specific color
     SDL_RenderClear(renderer);                         // clear back buffer with the specified color
 
     manager.render();
+
+    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer);
 
     SDL_RenderPresent(renderer); // swap back and front buffer
 }
@@ -103,6 +125,12 @@ void Game::render()
 //  cleaning after myself
 void Game::destroy()
 {
+    // imgui
+    ImGui_ImplSDLRenderer2_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+
+    // sdl
     asset_manager->clear();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
