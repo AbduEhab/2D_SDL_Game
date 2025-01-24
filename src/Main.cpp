@@ -18,7 +18,7 @@ int main(int argc, char *arg[])
 
         game.process_input();
         game.update(Engine::delta_time);
-        game.render();
+        game.render(Engine::delta_time);
     }
 
     game.destroy();

@@ -15,20 +15,20 @@ class EntityManager;
 
 class [[nodiscard]] Entity
 {
-private:
-    EntityManager &manager;
-    bool active;
-    std::vector<Component *> components;
-    std::map<const std::type_info *, Component *> components_by_types;
-
 public:
     std::string name;
+    std::vector<Component *> components;
+
     Entity(EntityManager &manager);
     Entity(EntityManager &manager, std::string name);
+
     void list_all_components(std::string indentation = "") const;
+
     [[nodiscard]] bool is_active() const;
+
     void update(float delta_time);
     void render() const;
+    
     void destroy();
 
     std::string to_string();
@@ -55,4 +55,9 @@ public:
     {
         return !(components_by_types[&typeid(T)] == nullptr);
     }
+
+    private:
+    EntityManager &manager;
+    bool active;
+    std::map<const std::type_info *, Component *> components_by_types;
 };

@@ -8,7 +8,6 @@
 EntityManager manager;
 AssetManager *Game::asset_manager = new AssetManager(&manager);
 SDL_Renderer *Game::renderer;
-SDL_Event Game::event;
 KEYSTATE Game::key_state;
 SDL_Keycode Game::last_key;
 
@@ -79,12 +78,11 @@ void Game::load_level([[maybe_unused]] int level_number) const
 
 void Game::process_input()
 {
-    SDL_Event local_event;
+    SDL_Event event;
     bool state_updated = false;
     // poll for events
-    while (SDL_PollEvent(&local_event))
+    while (SDL_PollEvent(&event))
     {
-        Game::event = local_event;
         ImGui_ImplSDL2_ProcessEvent(&event);
 
         switch (event.type) // get event type and switch on it
@@ -97,7 +95,6 @@ void Game::process_input()
 
             if (!state_updated) [[unlikely]]
             {
-                debug_print("Key pressed: ", (char)event.key.keysym.sym, ", State: pressed");
                 key_state = KEYSTATE::PRESSED;
                 last_key = event.key.keysym.sym;
                 state_updated = true;
@@ -119,7 +116,6 @@ void Game::process_input()
 
             if (!state_updated) [[unlikely]]
             {
-                debug_print("Key pressed: ", (char)event.key.keysym.sym, "State: released");
                 key_state = KEYSTATE::RELEASED;
                 state_updated = true;
             }
@@ -143,21 +139,45 @@ void Game::update(const float delta_time)
 
     if (res) [[unlikely]]
     {
-        SDL_SetWindowTitle(window, (std::to_string(1 / delta_time).append(" | ").append(std::to_string(delta_time))).append(" | ").append(std::to_string(SDL_GetTicks64())).c_str());
-        // debug_print("Game Update: ", manager.get_entities()[0]->get_component<TransformComponent>()->to_string());
-        // debug_print("Game input: ", std::to_string(event.key.keysym.sym));
         time_s = Clock::now();
     }
 }
 
-void Game::render()
+void Game::render(const float delta_time)
 {
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
-    ImGui::Begin("test");
-    ImGui::Text("Hello, world!");
+    ImGui::Begin("Entity Manager");
+
+    for (auto &entity : manager.get_entities())
+    {
+        if (ImGui::TreeNode(entity->name.c_str()))
+        {
+            for (auto &component : entity->components)
+            {
+                auto name = std::string(typeid(*component).name()).erase(0, 2);
+
+                ImGui::SeparatorText(name.c_str());
+                component->debug_render();
+            }
+            ImGui::TreePop();
+        }
+    }
     ImGui::End();
+
+    ImGui::Begin("Game Data");
+    ImGui::BeginDisabled();
+    auto framerate = (1 / delta_time);
+    ImGui::InputFloat("Framerate", &framerate);
+    auto dt = delta_time;
+    ImGui::InputFloat("Frametime", &dt);
+    ImGui::EndDisabled();
+    ImGui::Text("RunTime: %u", SDL_GetTicks64());
+    ImGui::Text("Last Button Pressed: %s", SDL_GetKeyName(last_key));
+    ImGui::End();
+
+    SDL_RenderSetScale(renderer, scale, scale); // set the scale of the renderer
 
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255); // set up the given renderer to render a specific color
     SDL_RenderClear(renderer);                         // clear back buffer with the specified color

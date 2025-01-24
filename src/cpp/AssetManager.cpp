@@ -28,3 +28,15 @@ SDL_Texture *AssetManager::get_texture(std::string texture_id)
 {
     return textures[texture_id];
 }
+
+std::string AssetManager::get_texture_name(SDL_Texture *texture)
+{
+    for (auto &texture_name : textures)
+    {
+        if (texture_name.second == texture)
+        {
+            return texture_name.first;
+        }
+    }
+    return "Texture not found";
+}

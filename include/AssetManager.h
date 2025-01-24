@@ -16,4 +16,5 @@ public:
     void clear();
     void add_texture(std::string texture_id, const char *asset_file);
     SDL_Texture *get_texture(std::string texture_id);
+    std::string get_texture_name(SDL_Texture *texture);
 };

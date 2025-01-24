@@ -7,26 +7,12 @@
 
 class SpriteComponent : public Component
 {
-private:
-    TransformComponent *transform;
-    SDL_Texture *texture;
-    SDL_Rect source_rect;
-    SDL_Rect destiation_rect;
-
-    bool is_animated;
-    bool is_fixed;
-
-    int frame_count;
-    int animation_speed;
-
-    std::map<std::string, Animation> animations;
-
-    std::string current_animation_name;
-
-    unsigned int animation_index = 0;
-
 public:
     SDL_RendererFlip flip = SDL_FLIP_NONE;
+
+#ifdef DEBUG
+    std::string name = "SpriteComponent";
+#endif // DEBUG
 
     SpriteComponent(std::string texture_id, bool is_fixed = false)
     {
@@ -120,8 +106,44 @@ public:
         TextureManager::draw(texture, source_rect, destiation_rect, flip);
     }
 
-    std::string to_string()
+    void debug_render()
+    {
+#ifdef DEBUG
+        ImGui::Text("SpriteComponent: ");
+        if (ImGui::TreeNode("Texture Info"))
+        {
+            ImGui::Text("texture_id: %s", Game::asset_manager->get_texture_name(texture).c_str());
+            ImGui::TreePop();
+        }
+        ImGui::Text("Destination Rect: %d, %d", destiation_rect.x, destiation_rect.y);
+        ImGui::Text("Animation Index: %d", animation_index);
+        ImGui::Text("Frame Count: %d", frame_count);
+        ImGui::DragInt("Animation Speed", &animation_speed, 1, 0, 50);
+        ImGui::Text("Current Animation: %s", current_animation_name.c_str());
+        ImGui::Text("Is Animated: %s", is_animated ? "true" : "false");
+#endif // DEBUG
+    }
+
+    std::string to_string() const
     {
         return std::string("Component<SpriteComponent>: ");
     }
+
+private:
+    TransformComponent *transform;
+    SDL_Texture *texture;
+    SDL_Rect source_rect;
+    SDL_Rect destiation_rect;
+
+    bool is_animated;
+    bool is_fixed;
+
+    int frame_count;
+    int animation_speed;
+
+    std::map<std::string, Animation> animations;
+
+    std::string current_animation_name;
+
+    unsigned int animation_index = 0;
 };

@@ -33,9 +33,10 @@ public:
     Game() = default;
 
     static AssetManager *asset_manager;
-    static SDL_Event event;
     static KEYSTATE key_state;
     static SDL_Keycode last_key;
+
+    float scale = 1.f;
 
     [[nodiscard]] bool is_running() const;
     static SDL_Renderer *renderer; // the sdl graphics renderer
@@ -43,6 +44,6 @@ public:
     void init(int width, int height);
     void process_input();
     void update(const float delta_time);
-    void render();
+    void render(const float delta_time);
     void destroy();
 };

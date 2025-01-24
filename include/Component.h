@@ -12,9 +12,14 @@ public:
     virtual void init() {}
     virtual void update(float delta_time) = 0;
     virtual void render() {}
+    virtual void debug_render() {}
 
-    virtual std::string to_string()
+#ifdef DEBUG
+    std::string name;
+#endif // DEBUG
+
+    virtual std::string to_string() const
     {
-        return std::string("Method Not Implemented");
+        return std::string("Component Does not have a to_string method.");
     }
 };

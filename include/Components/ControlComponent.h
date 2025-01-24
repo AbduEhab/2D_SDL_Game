@@ -20,6 +20,10 @@ public:
     TransformComponent *transform;
     SpriteComponent *sprite;
 
+#ifdef DEBUG
+    std::string name = "ControlComponent";
+#endif // DEBUG
+
     ControlComponent() = default;
     ControlComponent(std::string up_key, std::string down_key, std::string left_key, std::string right_key, std::string shoot_key)
     {
@@ -56,39 +60,47 @@ public:
             {
                 transform->velocity = glm::vec2(0, -10);
                 sprite->play("UpAnimation");
-                debug_print("Up key pressed\n");
                 return;
             }
             if (key == down_key)
             {
                 transform->velocity = glm::vec2(0, 10);
                 sprite->play("DownAnimation");
-                debug_print("Down key pressed\n");
                 return;
             }
             if (key == left_key)
             {
                 transform->velocity = glm::vec2(-10, 0);
                 sprite->play("LeftAnimation");
-                debug_print("Left key pressed\n");
                 return;
             }
             if (key == right_key)
             {
                 transform->velocity = glm::vec2(10, 0);
                 sprite->play("RightAnimation");
-                debug_print("Right key pressed\n");
                 return;
             }
         }
         if (Game::key_state == KEYSTATE::RELEASED)
         {
-            SDL_Keycode key = Game::event.key.keysym.sym;
+            SDL_Keycode key = Game::last_key;
 
             if (key == up_key || key == down_key || key == left_key || key == right_key)
             {
                 transform->velocity = glm::vec2(0);
             }
         }
+    }
+
+    void debug_render()
+    {
+#ifdef DEBUG
+        ImGui::Text("ControlComponent: ");
+        ImGui::Text("Up Key: %s", SDL_GetKeyName(up_key));
+        ImGui::Text("Down Key: %s", SDL_GetKeyName(down_key));
+        ImGui::Text("Left Key: %s", SDL_GetKeyName(left_key));
+        ImGui::Text("Right Key: %s", SDL_GetKeyName(right_key));
+
+#endif // DEBUG
     }
 };
