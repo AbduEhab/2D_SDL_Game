@@ -1,13 +1,13 @@
 #pragma once
 
+#include <Constants.hpp>
+
 struct Animation
 {
-    int index;
-    int frames;
-    int speed;
-    int animation_speed;
-    int animation_index;
+    size_t index;
+    size_t frames;
+    size_t speed;
 
     Animation();
-    Animation(int index, int frames, int speed);
+    Animation(size_t index, size_t frames, size_t speed);
 };

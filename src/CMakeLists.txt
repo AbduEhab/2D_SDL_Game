@@ -1,8 +1,7 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.16.0)
 
 file(GLOB_RECURSE SRC_CXX_FILES CONFIGURE_DEPENDS *.cpp)
 file(GLOB_RECURSE SRC_C_FILES CONFIGURE_DEPENDS *.c)
-file(GLOB_RECURSE SRC_TPP_FILES CONFIGURE_DEPENDS *.tpp)
 file(GLOB_RECURSE INC_CXX_FILES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/include*.cpp)
 file(GLOB_RECURSE INC_C_FILES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/include*.c)
 
@@ -10,7 +9,6 @@ file(GLOB_RECURSE INC_C_FILES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/include*.c
 add_executable(${PROJECT_NAME}
     ${SRC_CXX_FILES}
     ${SRC_C_FILES}
-    ${SRC_TPP_FILES}
     ${INC_CXX_FILES}
     ${INC_C_FILES}
 )
@@ -34,22 +32,11 @@ add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:${PROJECT_NAME}>
-    ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM}/ # Change this to your Prefered location (I prefer ${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/ or ${CMAKE_SOURCE_DIR}/bin/$<CMAKE_GENERATOR_PLATFORM>/)
+    ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM} # Change this to your Prefered location (I prefer ${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/ or ${CMAKE_SOURCE_DIR}/bin/$<CMAKE_GENERATOR_PLATFORM>/)
 )
 
-add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/assets
-    ${CMAKE_SOURCE_DIR}/bin/assets
-)
-
-add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/assets
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>/../assets
-)
+file(CREATE_LINK ${PROJECT_SOURCE_DIR}/assets assets SYMBOLIC)
+file(CREATE_LINK ${CMAKE_SOURCE_DIR}/assets ${PROJECT_SOURCE_DIR}/bin/assets SYMBOLIC)
 
 if(UNIX AND NOT APPLE)
     # Delete Cmake files
@@ -103,14 +90,14 @@ else()
             add_custom_command(
                 TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_BINARY_DIR}/external/SDL_mixer/$<CONFIG>/SDL2_mixer.dll
-                ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM}/SDL2_mixer.dll)
+                ${CMAKE_BINARY_DIR}/external/SDL_mixer/$<CONFIG>/SDL2_mixer$<$<CONFIG:Debug>:d>.dll
+                ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM}/SDL2_mixer$<$<CONFIG:Debug>:d>.dll)
 
             add_custom_command(
                 TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_BINARY_DIR}/external/SDL_mixer/$<CONFIG>/SDL2_mixer.dll
-                $<TARGET_FILE_DIR:${PROJECT_NAME}>/SDL2_mixer.dll)
+                ${CMAKE_BINARY_DIR}/external/SDL_mixer/$<CONFIG>/SDL2_mixer$<$<CONFIG:Debug>:d>.dll
+                $<TARGET_FILE_DIR:${PROJECT_NAME}>/SDL2_mixer$<$<CONFIG:Debug>:d>.dll)
         endif()
 
         if(USE_SDL_TTF)
@@ -131,26 +118,18 @@ else()
             add_custom_command(
                 TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_BINARY_DIR}/external/sdl_net/$<CONFIG>/SDL2_net.dll
-                ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM}/SDL2_net.dll)
+                ${CMAKE_BINARY_DIR}/external/sdl_net/$<CONFIG>/SDL2_net$<$<CONFIG:Debug>:d>.dll
+                ${CMAKE_SOURCE_DIR}/bin/${CMAKE_GENERATOR_PLATFORM}/SDL2_net$<$<CONFIG:Debug>:d>.dll)
 
             add_custom_command(
                 TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_BINARY_DIR}/external/sdl_net/$<CONFIG>/SDL2_net.dll
-                $<TARGET_FILE_DIR:${PROJECT_NAME}>/SDL2_net.dll)
+                ${CMAKE_BINARY_DIR}/external/sdl_net/$<CONFIG>/SDL2_net$<$<CONFIG:Debug>:d>.dll
+                $<TARGET_FILE_DIR:${PROJECT_NAME}>/SDL2_net$<$<CONFIG:Debug>:d>.dll)
         endif()
     else()
         message(STATUS "SDL3 is not supported yet but is coming soon (TM).")
     endif()
 endif()
 
-# Link assets needed for the binary to run
-
-# add_custom_command(
-# TARGET ${PROJECT_NAME} POST_BUILD
-# COMMAND ${CMAKE_COMMAND} -E create_symlink ${link_src} ${link_dst}
-# DEPENDS ${link_dst}
-# COMMENT "symbolic link ${link_src} => ${link_dst}"
-# )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

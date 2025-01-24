@@ -29,6 +29,7 @@
 #include <utility>
 #include <vector>
 
+constexpr bool VSYNC = true;
 constexpr float FPS = -1;
 constexpr inline float FRAME_TIME_TARGET = (1000.0f / FPS);
 

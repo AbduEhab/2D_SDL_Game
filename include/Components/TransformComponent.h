@@ -19,7 +19,7 @@ public:
         : position(glm::vec2(pos_X, pos_Y)), velocity(glm::vec2(vel_X, vel_Y)),
           width(width), height(height), scale(scale) {}
 
-    void update(float delta_time)
+    void update(const float delta_time)
     {
         position.x += velocity.x * delta_time;
         position.y += velocity.y * delta_time;

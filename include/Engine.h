@@ -15,31 +15,31 @@ namespace Engine
 
     inline static float delta_time;
 
-    inline static TimePoint ticks_last_frame;
+    inline static TimePoint end_time_of_last_frame;
 
-    inline float get_ticks()
+    inline float get_delta_time()
     {
-        return (float)(Clock::now() - ticks_last_frame).count();
+        return (float)(Clock::now() - end_time_of_last_frame).count();
     }
 
-    inline float get_ticks_milliseconds()
+    inline float get_delta_time_in_microseconds()
     {
-        return (Clock::now() - ticks_last_frame).count() * 1e-6;
+        return (Clock::now() - end_time_of_last_frame).count() * 1e-3;
     }
 
-    inline float get_ticks_microseconds()
+    inline float get_delta_time_in_milliseconds()
     {
-        return (Clock::now() - ticks_last_frame).count() * 13e-3;
+        return (Clock::now() - end_time_of_last_frame).count() * 1e-6;
     }
 
-    inline float get_ticks_seconds()
+    inline float get_delta_time_in_seconds()
     {
-        return (Clock::now() - ticks_last_frame).count() * 1e-9;
+        return (Clock::now() - end_time_of_last_frame).count() * 1e-9;
     }
 
     inline void calculate_deltatime_and_wait()
     {
-        float waitTime = FRAME_TIME_TARGET - (Engine::get_ticks_milliseconds()); // calculate time to wait between frames
+        float waitTime = FRAME_TIME_TARGET - (Engine::get_delta_time_in_milliseconds()); // calculate time to wait between frames
 
         if constexpr (FPS > 0)
         {
@@ -51,8 +51,8 @@ namespace Engine
             }
         }
 
-        delta_time = Engine::get_ticks_seconds(); // diffrence between the time since the last frame and the current frame in seconds
+        delta_time = Engine::get_delta_time_in_seconds(); // diffrence between the time since the last frame and the current frame in seconds
 
-        Engine::ticks_last_frame = Clock::now(); // update the lastFrameTime time to be used in the next pass
+        Engine::end_time_of_last_frame = Clock::now(); // update the lastFrameTime time to be used in the next pass
     }
 }

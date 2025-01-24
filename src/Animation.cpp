@@ -1,16 +1,12 @@
-#pragma once
-
 #include "Animation.h"
 
 Animation::Animation()
 {
 }
 
-Animation::Animation(int index, int frames, int speed)
+Animation::Animation(size_t index, size_t frames, size_t speed)
 {
     this->index = index;
     this->frames = frames;
     this->speed = speed;
-    this->animation_index = 0;
-    this->animation_speed = 0;
 }

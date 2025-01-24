@@ -10,7 +10,7 @@ int main(int argc, char *arg[])
 
     game.init(800, 600);
 
-    Engine::ticks_last_frame = Clock::now();
+    Engine::end_time_of_last_frame = Clock::now();
 
     while (game.is_running())
     {
@@ -20,6 +20,8 @@ int main(int argc, char *arg[])
         game.update(Engine::delta_time);
         game.render();
     }
+
+    game.destroy();
 
     return 0;
 }

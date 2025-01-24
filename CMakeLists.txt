@@ -222,11 +222,10 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/external/glm)
     )
 endif()
 
+# <------------------------------------------------>
 add_subdirectory(
     external/glm
 )
-
-# <------------------------------------------------>
 
 # <-- Add directory of external libs to link here: -->
 target_link_directories(${PROJECT_NAME}

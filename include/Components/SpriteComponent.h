@@ -12,12 +12,17 @@ private:
     SDL_Texture *texture;
     SDL_Rect source_rect;
     SDL_Rect destiation_rect;
+
     bool is_animated;
+    bool is_fixed;
+
     int frame_count;
     int animation_speed;
-    bool is_fixed;
+
     std::map<std::string, Animation> animations;
+
     std::string current_animation_name;
+
     unsigned int animation_index = 0;
 
 public:
@@ -69,7 +74,7 @@ public:
     {
         frame_count = animations[animationName].frames;
         animation_index = animations[animationName].index;
-        animation_speed = animations[animationName].animation_speed;
+        animation_speed = animations[animationName].speed;
         current_animation_name = animationName;
     }
 
@@ -92,7 +97,7 @@ public:
         destiation_rect.h = transform->height * transform->scale;
     }
 
-    void update([[maybe_unused]] float delta_time)
+    void update([[maybe_unused]] const float delta_time)
     {
         if (is_animated)
         {
@@ -108,7 +113,6 @@ public:
             destiation_rect.w = transform->width * transform->scale;
             destiation_rect.h = transform->height * transform->scale;
         }
-
     }
 
     void render()
